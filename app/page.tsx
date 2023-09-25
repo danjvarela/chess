@@ -1,3 +1,14 @@
+import Chessboard from "@/components/chessboard"
+import Playerinfo from "@/components/playerinfo"
+
 export default function Home() {
-  return <div>hello world</div>;
+  return (
+    <div className="flex-1 flex items-center justify-center px-4">
+      <div className="container max-w-xl flex flex-col ">
+        <Playerinfo isActive />
+        <Chessboard />
+        <Playerinfo />
+      </div>
+    </div>
+  )
 }
