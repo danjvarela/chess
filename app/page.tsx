@@ -1,5 +1,5 @@
-import Chessboard from "@/components/chessboard"
 import Playerinfo from "@/components/playerinfo"
+import Chessboard from "@/components/chessboard"
 
 export default function Home() {
   return (
