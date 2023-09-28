@@ -1,7 +1,7 @@
 "use client"
 
 import { useCountdownTimer } from "@/hooks/countdown-timer"
-import { useGame } from "@/hooks/game"
+import { useGame, useGameOver } from "@/hooks/game"
 import { Color } from "chess.js"
 import { useEffect } from "react"
 
@@ -11,9 +11,13 @@ export type PlayerinfoProps = {
 }
 
 export default function Playerinfo({ name, color }: PlayerinfoProps) {
+  const { setGameOver } = useGameOver()
   const { CountdownTimer, timer } = useCountdownTimer({
-    expireAfterMinutes: 15,
+    expireAfterMinutes: 1,
     autoStart: color === "w",
+    onExpire: () => {
+      setGameOver(true)
+    },
   })
   const { game } = useGame()
 
