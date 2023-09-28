@@ -5,9 +5,9 @@ export default function Home() {
   return (
     <div className="flex-1 flex items-center justify-center px-4">
       <div className="container max-w-xl flex flex-col ">
-        <Playerinfo isActive />
+        <Playerinfo name="Black" color="b" />
         <Chessboard />
-        <Playerinfo />
+        <Playerinfo name="White" color="w" />
       </div>
     </div>
   )

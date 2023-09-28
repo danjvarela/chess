@@ -31,5 +31,5 @@ export const useGame = () => {
     setGameFromState(game)
   }, [game])
 
-  return { game, setGame }
+  return { game: gameFromState, setGame }
 }
