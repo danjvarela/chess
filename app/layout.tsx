@@ -2,6 +2,7 @@ import "./globals.css"
 import "@radix-ui/themes/styles.css"
 import type { Metadata } from "next"
 import Providers from "./providers"
+import Footer from "@/components/footer"
 
 export const metadata: Metadata = {
   title: "Chess",
@@ -16,7 +17,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <Providers>{children}</Providers>
+        <Providers>
+          <div className="w-fit mx-auto min-h-screen flex flex-col">
+            {children}
+            <Footer />
+          </div>
+        </Providers>
       </body>
     </html>
   )
