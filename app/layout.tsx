@@ -1,10 +1,8 @@
-import cn from "@/utils/cn"
 import "./globals.css"
+import "@radix-ui/themes/styles.css"
 import type { Metadata } from "next"
-import { Inter } from "next/font/google"
-import Header from "@/components/header"
-
-const inter = Inter({ subsets: ["latin"] })
+import Providers from "./providers"
+import Footer from "@/components/footer"
 
 export const metadata: Metadata = {
   title: "Chess",
@@ -18,14 +16,13 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body
-        className={cn(
-          inter.className,
-          "bg-sagedark-1 text-tealdark-12 w-screen h-screen flex flex-col"
-        )}
-      >
-        <Header />
-        {children}
+      <body>
+        <Providers>
+          <div className="w-fit mx-auto min-h-screen flex flex-col">
+            {children}
+            <Footer />
+          </div>
+        </Providers>
       </body>
     </html>
   )
