@@ -1,20 +1,35 @@
 import { Chess } from "chess.js"
 import { useEffect, useState } from "react"
 import { create } from "zustand"
+import { subscribeWithSelector } from "zustand/middleware"
 
 type GameState = {
   game: Chess
+  gameOver: boolean
   actions: {
     setGame: (chess: Chess) => void
+    setGameOver: (gameOver: boolean) => void
   }
 }
 
-const useGameStore = create<GameState>((set) => ({
-  game: new Chess(),
-  actions: {
-    setGame: (game: Chess) => set(() => ({ game })),
-  },
-}))
+const useGameStore = create(
+  subscribeWithSelector<GameState>((set, get) => ({
+    game: new Chess(),
+    gameOver: false,
+    actions: {
+      setGame: (game: Chess) => set(() => ({ game })),
+      setGameOver: (gameOver: boolean) => set(() => ({ gameOver })),
+    },
+  }))
+)
+
+// set game over automatically on checkmate
+useGameStore.subscribe(
+  (state) => state.game,
+  (game) => {
+    useGameStore.setState({ gameOver: game.isGameOver() })
+  }
+)
 
 export const useGame = () => {
   const { game: gameFromState, setGame: setGameFromState } = useGameStore(
@@ -31,5 +46,11 @@ export const useGame = () => {
     setGameFromState(game)
   }, [game])
 
-  return { game, setGame }
+  return { game: gameFromState, setGame }
 }
+
+export const useGameOver = () =>
+  useGameStore((state) => ({
+    gameOver: state.gameOver,
+    setGameOver: state.actions.setGameOver,
+  }))
