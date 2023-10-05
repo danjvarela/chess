@@ -43,6 +43,7 @@ const useEngineGameStore = create<EngineGameSettings>()(
       {
         name: "chess_engine_game_settings",
         partialize: (state) => omit(state, ["actions"]),
+        skipHydration: true,
       }
     )
   )

@@ -1,17 +1,21 @@
-import { useState, useEffect } from "react"
+import { useEffect } from "react"
+import { StoreApi, create } from "zustand"
 
-const usePersistStore = <T, F>(
-  store: (callback: (state: T) => unknown) => unknown,
-  callback: (state: T) => F
+const usePersistStore = <T, U>(
+  store: ReturnType<typeof create<StoreApi<T>>> & {
+    persist: { rehydrate: () => void }
+  },
+  callback: (state: T) => U
 ) => {
-  const result = store(callback) as F
-  const [data, setData] = useState<F>()
+  const result = store(callback)
 
   useEffect(() => {
-    setData(result)
-  }, [result])
+    if (store.persist && typeof store.persist.rehydrate === "function") {
+      store.persist.rehydrate()
+    }
+  }, [])
 
-  return data
+  return result
 }
 
 export default usePersistStore
