@@ -7,7 +7,7 @@ import {
   possibleMoveStyle,
   sharedProps,
 } from "./sharedProps"
-import { use, useState } from "react"
+import { useCallback, useState } from "react"
 import {
   CustomSquareStyles,
   PromotionPieceOption,
@@ -34,13 +34,16 @@ export default function MobileChessboard() {
     setShowPromotionDialog(false)
   }
 
-  const makeMove = (from: Square, to: Square, promotion?: PieceSymbol) => {
-    try {
-      game.move({ from, to, promotion })
-      setGame((game) => new Chess(game.fen()))
-      reset()
-    } catch (err) {}
-  }
+  const makeMove = useCallback(
+    (from: Square, to: Square, promotion?: PieceSymbol) => {
+      try {
+        game.move({ from, to, promotion })
+        setGame(new Chess(game.fen()))
+        reset()
+      } catch (err) {}
+    },
+    [game]
+  )
 
   const handleOnSquareClick = (square: Square) => {
     const pieceOnClickedSquare = game.get(square)
