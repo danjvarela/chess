@@ -11,10 +11,19 @@ export default function Footer() {
         )}
       >
         <Separator orientation="horizontal" size="4" className="mb-2" />
+        <span className="flex gap-2">
+          <Link href="https://github.com/danjvarela/chess" target="_blank">
+            Source Code
+          </Link>
+          |
+          <span className="whitespace-break-spaces">
+            Created by{" "}
+            <Link href="https://danvarela.com" target="_blank">
+              danvarela.com
+            </Link>
+          </span>
+        </span>
         <div>Made using Radix UI, Next.js, Typescript and Tailwindcss</div>
-        <Link href="https://github.com/danjvarela/chess" target="_blank">
-          Source Code
-        </Link>
       </div>
     </div>
   )
