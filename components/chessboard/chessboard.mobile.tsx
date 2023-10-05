@@ -7,18 +7,19 @@ import {
   possibleMoveStyle,
   sharedProps,
 } from "./sharedProps"
-import { useCallback, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import {
   CustomSquareStyles,
   PromotionPieceOption,
 } from "react-chessboard/dist/chessboard/types"
-import { useGame } from "@/hooks/game"
 import { Square, Chess, PieceSymbol } from "chess.js"
 import { useIsClient } from "usehooks-ts"
 import Loading from "@/app/loading"
+import { useEngineFen } from "@/hooks/engine-game-settings"
 
 export default function MobileChessboard() {
-  const { game, setGame } = useGame()
+  const { fen, setFen } = useEngineFen()
+  const [game, setGame] = useState(new Chess(fen))
   const [showPromotionDialog, setShowPromotionDialog] = useState(false)
   const [moveFrom, setMoveFrom] = useState<Square>()
   const [promotionToSquare, setPromotionToSquare] = useState<Square>()
@@ -38,7 +39,7 @@ export default function MobileChessboard() {
     (from: Square, to: Square, promotion?: PieceSymbol) => {
       try {
         game.move({ from, to, promotion })
-        setGame(new Chess(game.fen()))
+        setFen(game.fen())
         reset()
       } catch (err) {}
     },
@@ -122,6 +123,10 @@ export default function MobileChessboard() {
     reset()
     return true
   }
+
+  useEffect(() => {
+    setGame(new Chess(fen))
+  }, [fen])
 
   if (!isClient) {
     return <Loading />

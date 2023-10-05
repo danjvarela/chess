@@ -50,14 +50,15 @@ const useEngineGameStore = create<EngineGameSettings>()(
 )
 
 export const useEngineFen = () => {
-  const data = usePersistStore(useEngineGameStore, (state) => ({
+  return usePersistStore(useEngineGameStore, (state) => ({
     fen: state.fen,
     setFen: state.actions.setFen,
   }))
+}
 
-  if (!data) {
-    return { fen: undefined, setFen: () => {} }
-  }
-
-  return data
+export const useEngineGameStarted = () => {
+  return usePersistStore(useEngineGameStore, (state) => ({
+    gameStarted: state.gameStarted,
+    setGameStarted: state.actions.setGameStarted,
+  }))
 }

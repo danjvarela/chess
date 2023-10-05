@@ -1,20 +1,21 @@
 "use client"
 
 import { Chessboard as ReactChessboard } from "react-chessboard"
-import { useCallback, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { Chess } from "chess.js"
 import {
   CustomSquareStyles,
   Piece,
   Square,
 } from "react-chessboard/dist/chessboard/types"
-import { useGame } from "@/hooks/game"
 import { kingCheckedStyle, possibleMoveStyle, sharedProps } from "./sharedProps"
 import { useIsClient } from "usehooks-ts"
 import Loading from "@/app/loading"
+import { useEngineFen } from "@/hooks/engine-game-settings"
 
 export default function BrowserChessboard() {
-  const { game, setGame } = useGame()
+  const { fen, setFen } = useEngineFen()
+  const [game, setGame] = useState(new Chess(fen))
   const [customSquareStyles, setCustomSquareStyles] =
     useState<CustomSquareStyles>({})
   const isClient = useIsClient()
@@ -60,7 +61,7 @@ export default function BrowserChessboard() {
           promotion: piece[1].toLowerCase() ?? "q",
         })
 
-        setGame(new Chess(game.fen()))
+        setFen(game.fen())
         setCustomSquareStyles({})
         return true
       } catch (err) {
@@ -80,6 +81,10 @@ export default function BrowserChessboard() {
     },
     [game]
   )
+
+  useEffect(() => {
+    setGame(new Chess(fen))
+  }, [fen])
 
   if (!isClient) {
     return <Loading />
