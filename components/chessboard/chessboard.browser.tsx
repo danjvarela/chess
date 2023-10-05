@@ -10,11 +10,14 @@ import {
 } from "react-chessboard/dist/chessboard/types"
 import { useGame } from "@/hooks/game"
 import { kingCheckedStyle, sharedProps } from "./sharedProps"
+import { useIsClient } from "usehooks-ts"
+import Loading from "@/app/loading"
 
 export default function BrowserChessboard() {
   const { game, setGame } = useGame()
   const [customSquareStyles, setCustomSquareStyles] =
     useState<CustomSquareStyles>({})
+  const isClient = useIsClient()
 
   const handlePieceDrop = useCallback(
     (sourceSquare: Square, targetSquare: Square, piece: Piece) => {
@@ -45,6 +48,10 @@ export default function BrowserChessboard() {
     },
     [game]
   )
+
+  if (!isClient) {
+    return <Loading />
+  }
 
   return (
     <ReactChessboard

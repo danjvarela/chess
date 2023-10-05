@@ -7,19 +7,22 @@ import {
   possibleMoveStyle,
   sharedProps,
 } from "./sharedProps"
-import { useState } from "react"
+import { use, useState } from "react"
 import {
   CustomSquareStyles,
   PromotionPieceOption,
 } from "react-chessboard/dist/chessboard/types"
 import { useGame } from "@/hooks/game"
 import { Square, Chess, PieceSymbol } from "chess.js"
+import { useIsClient } from "usehooks-ts"
+import Loading from "@/app/loading"
 
 export default function MobileChessboard() {
   const { game, setGame } = useGame()
   const [showPromotionDialog, setShowPromotionDialog] = useState(false)
   const [moveFrom, setMoveFrom] = useState<Square>()
   const [promotionToSquare, setPromotionToSquare] = useState<Square>()
+  const isClient = useIsClient()
 
   const [customSquareStyles, setCustomSquareStyles] =
     useState<CustomSquareStyles>()
@@ -115,6 +118,10 @@ export default function MobileChessboard() {
     // so we just reset and dont make a move
     reset()
     return true
+  }
+
+  if (!isClient) {
+    return <Loading />
   }
 
   return (
