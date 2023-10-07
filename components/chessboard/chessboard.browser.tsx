@@ -1,7 +1,7 @@
 "use client"
 
 import { Chessboard as ReactChessboard } from "react-chessboard"
-import { useCallback, useEffect, useState } from "react"
+import { useCallback, useEffect, useMemo, useState } from "react"
 import { Chess } from "chess.js"
 import {
   CustomSquareStyles,
@@ -48,10 +48,6 @@ export default function BrowserChessboard() {
     handleOnSquareClick(square)
   }
 
-  const handleOnPieceDragEnd = () => {
-    setCustomSquareStyles({})
-  }
-
   const handlePieceDrop = useCallback(
     (sourceSquare: Square, targetSquare: Square, piece: Piece) => {
       try {
@@ -74,6 +70,8 @@ export default function BrowserChessboard() {
                 position?.color === game.turn() && position.type === "k"
             )?.square
           if (!kingSquare) return false
+
+          setCustomSquareStyles({})
           setCustomSquareStyles({ [kingSquare]: kingCheckedStyle })
         }
         return false
@@ -94,7 +92,6 @@ export default function BrowserChessboard() {
     <ReactChessboard
       position={game.fen()}
       onPieceDrop={handlePieceDrop}
-      onPieceDragEnd={handleOnPieceDragEnd}
       onPieceDragBegin={handleOnPieceDragBegin}
       onSquareClick={handleOnSquareClick}
       customSquareStyles={customSquareStyles}
