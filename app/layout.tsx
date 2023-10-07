@@ -18,7 +18,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body>
         <Providers>
-          <div className="w-fit mx-auto min-h-screen flex flex-col">
+          <div className="container mx-auto min-h-screen flex flex-col">
             {children}
             <Footer />
           </div>

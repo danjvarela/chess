@@ -7,7 +7,7 @@ export default function Footer() {
       <div
         className={cn(
           "text-sm text-sage-900 flex flex-col items-center justify-center w-full h-fit",
-          "gap-1 text-center"
+          "gap-1 text-center max-w-3xl mx-auto"
         )}
       >
         <Separator orientation="horizontal" size="4" className="mb-2" />
