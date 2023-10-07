@@ -19,17 +19,23 @@ import {
   useEngine,
   useEngineDifficulty,
   useEngineFen,
+  useEnginePlayerColor,
 } from "@/hooks/engine-game-settings"
+import { DeviceSpecificChessboardProps } from "./types"
 
-export default function MobileChessboard() {
+export default function MobileChessboard({
+  mode,
+}: DeviceSpecificChessboardProps) {
   const { fen, setFen } = useEngineFen()
   const [game, setGame] = useState(new Chess(fen))
   const [showPromotionDialog, setShowPromotionDialog] = useState(false)
   const [moveFrom, setMoveFrom] = useState<Square>()
   const [promotionToSquare, setPromotionToSquare] = useState<Square>()
   const isClient = useIsClient()
+  const { playerColor } = useEnginePlayerColor()
   const { engine, executeEngineMove } = useEngine()
   const { difficulty } = useEngineDifficulty()
+  const vsEngine = mode === "vsEngine"
 
   const [customSquareStyles, setCustomSquareStyles] =
     useState<CustomSquareStyles>()
@@ -43,11 +49,13 @@ export default function MobileChessboard() {
 
   const makeMove = useCallback(
     (from: Square, to: Square, promotion?: PieceSymbol) => {
+      // prevent player from making a move on behalf of the engine
+      if (vsEngine && game.turn() !== playerColor) return
+
       try {
         game.move({ from, to, promotion })
         setFen(game.fen())
         reset()
-        executeEngineMove({ engine, game, setGame, difficulty })
       } catch (err) {}
     },
     [game]
@@ -134,6 +142,12 @@ export default function MobileChessboard() {
   useEffect(() => {
     setGame(new Chess(fen))
   }, [fen])
+
+  useEffect(() => {
+    if (vsEngine && game.turn() !== playerColor) {
+      executeEngineMove({ engine, game, setGame, difficulty })
+    }
+  }, [game, vsEngine, difficulty, engine])
 
   if (!isClient) {
     return <Loading />

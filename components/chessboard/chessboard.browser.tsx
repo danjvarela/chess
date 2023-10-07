@@ -15,9 +15,13 @@ import {
   useEngine,
   useEngineDifficulty,
   useEngineFen,
+  useEnginePlayerColor,
 } from "@/hooks/engine-game-settings"
+import { DeviceSpecificChessboardProps } from "./types"
 
-export default function BrowserChessboard() {
+export default function BrowserChessboard({
+  mode,
+}: DeviceSpecificChessboardProps) {
   const { fen, setFen } = useEngineFen()
   const [game, setGame] = useState(new Chess(fen))
   const [customSquareStyles, setCustomSquareStyles] =
@@ -25,6 +29,8 @@ export default function BrowserChessboard() {
   const isClient = useIsClient()
   const { engine, executeEngineMove } = useEngine()
   const { difficulty } = useEngineDifficulty()
+  const { playerColor } = useEnginePlayerColor()
+  const vsEngine = mode === "vsEngine"
 
   const handleOnSquareClick = useCallback(
     (square: Square) => {
@@ -56,6 +62,9 @@ export default function BrowserChessboard() {
 
   const handlePieceDrop = useCallback(
     (sourceSquare: Square, targetSquare: Square, piece: Piece) => {
+      // prevent player from making a move on behalf of the engine
+      if (vsEngine && game.turn() !== playerColor) return false
+
       try {
         game.move({
           from: sourceSquare,
@@ -65,7 +74,6 @@ export default function BrowserChessboard() {
 
         setFen(game.fen())
         setCustomSquareStyles({})
-        executeEngineMove({ engine, game, setGame, difficulty })
         return true
       } catch (err) {
         if (game.inCheck()) {
@@ -89,6 +97,12 @@ export default function BrowserChessboard() {
   useEffect(() => {
     setGame(new Chess(fen))
   }, [fen])
+
+  useEffect(() => {
+    if (vsEngine && game.turn() !== playerColor) {
+      executeEngineMove({ engine, game, setGame, difficulty })
+    }
+  }, [game, vsEngine, difficulty, engine])
 
   if (!isClient) {
     return <Loading />
