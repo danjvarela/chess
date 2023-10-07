@@ -78,7 +78,7 @@ export const useEngineDifficulty = () => {
   }))
 }
 
-export const usePlayerColor = () => {
+export const useEnginePlayerColor = () => {
   return usePersistStore(useEngineGameStore, (state) => ({
     playerColor: state.playerColor,
     setPlayerColor: state.actions.setPlayerColor,
@@ -87,7 +87,7 @@ export const usePlayerColor = () => {
 
 export const useEngine = () => {
   const [engine, setEngine] = useState<Engine>()
-  const { playerColor } = usePlayerColor()
+  const { playerColor } = useEnginePlayerColor()
 
   useEffect(() => {
     setEngine(new Engine(new Worker("/stockfish.js")))
