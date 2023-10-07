@@ -117,14 +117,11 @@ export const useEngine = () => {
               promotion: bestMove.substring(4, 5),
             })
 
-            const timeoutId = setTimeout(() => {
-              setGame(() => {
-                // so the event listeners won't pile up
-                removeMessageListener()
-                clearTimeout(timeoutId)
-                return new Chess(game.fen())
-              })
-            }, 500)
+            setGame(() => {
+              // so the event listeners won't pile up
+              removeMessageListener()
+              return new Chess(game.fen())
+            })
           }
         } catch (err) {}
       })
