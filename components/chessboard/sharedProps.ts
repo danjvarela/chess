@@ -6,7 +6,7 @@ export const kingCheckedStyle = {
 
 export const possibleMoveStyle = {
   background:
-    "radial-gradient(circle, hsla(140, 91.7%, 3.6%, 0.177) 25%, transparent 25%)",
+    "radial-gradient(circle, hsla(150, 93.2%, 3.0%, 0.279) 25%, transparent 25%)",
 }
 
 export const moveFromSquareStyle = {
@@ -15,10 +15,10 @@ export const moveFromSquareStyle = {
 
 export const sharedProps: React.ComponentProps<typeof Chessboard> = {
   customDarkSquareStyle: {
-    backgroundColor: "hsl(173, 80.0%, 36.0%)",
+    backgroundColor: "var(--jade-9)",
   },
   customLightSquareStyle: {
-    backgroundColor: "hsl(163, 70.0%, 81.0%)",
+    backgroundColor: "var(--jade-12)",
   },
   customDropSquareStyle: {
     boxShadow: "inset 0 0 1px 6px hsl(81, 80.0%, 66.0%)",
