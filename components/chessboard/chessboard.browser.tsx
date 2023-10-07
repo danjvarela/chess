@@ -11,7 +11,11 @@ import {
 import { kingCheckedStyle, possibleMoveStyle, sharedProps } from "./sharedProps"
 import { useIsClient } from "usehooks-ts"
 import Loading from "@/app/loading"
-import { useEngineFen } from "@/hooks/engine-game-settings"
+import {
+  useEngine,
+  useEngineDifficulty,
+  useEngineFen,
+} from "@/hooks/engine-game-settings"
 
 export default function BrowserChessboard() {
   const { fen, setFen } = useEngineFen()
@@ -19,6 +23,8 @@ export default function BrowserChessboard() {
   const [customSquareStyles, setCustomSquareStyles] =
     useState<CustomSquareStyles>({})
   const isClient = useIsClient()
+  const { engine, executeEngineMove } = useEngine()
+  const { difficulty } = useEngineDifficulty()
 
   const handleOnSquareClick = useCallback(
     (square: Square) => {
@@ -59,6 +65,7 @@ export default function BrowserChessboard() {
 
         setFen(game.fen())
         setCustomSquareStyles({})
+        executeEngineMove({ engine, game, setGame, difficulty })
         return true
       } catch (err) {
         if (game.inCheck()) {
@@ -71,13 +78,12 @@ export default function BrowserChessboard() {
             )?.square
           if (!kingSquare) return false
 
-          setCustomSquareStyles({})
           setCustomSquareStyles({ [kingSquare]: kingCheckedStyle })
         }
         return false
       }
     },
-    [game]
+    [game, engine]
   )
 
   useEffect(() => {

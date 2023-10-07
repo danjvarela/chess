@@ -15,7 +15,11 @@ import {
 import { Square, Chess, PieceSymbol } from "chess.js"
 import { useIsClient } from "usehooks-ts"
 import Loading from "@/app/loading"
-import { useEngineFen } from "@/hooks/engine-game-settings"
+import {
+  useEngine,
+  useEngineDifficulty,
+  useEngineFen,
+} from "@/hooks/engine-game-settings"
 
 export default function MobileChessboard() {
   const { fen, setFen } = useEngineFen()
@@ -24,6 +28,8 @@ export default function MobileChessboard() {
   const [moveFrom, setMoveFrom] = useState<Square>()
   const [promotionToSquare, setPromotionToSquare] = useState<Square>()
   const isClient = useIsClient()
+  const { engine, executeEngineMove } = useEngine()
+  const { difficulty } = useEngineDifficulty()
 
   const [customSquareStyles, setCustomSquareStyles] =
     useState<CustomSquareStyles>()
@@ -41,6 +47,7 @@ export default function MobileChessboard() {
         game.move({ from, to, promotion })
         setFen(game.fen())
         reset()
+        executeEngineMove({ engine, game, setGame, difficulty })
       } catch (err) {}
     },
     [game]

@@ -1,8 +1,16 @@
 import { create } from "zustand"
 import { persist, subscribeWithSelector } from "zustand/middleware"
 import omit from "lodash/omit"
-import { Color } from "chess.js"
+import { Chess, Color } from "chess.js"
 import usePersistStore from "./persist-store"
+import {
+  Dispatch,
+  SetStateAction,
+  useCallback,
+  useEffect,
+  useState,
+} from "react"
+import Engine from "@/utils/chess-engine"
 
 const DEFAULT_FEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
 const DEFAULT_ENGINE_DIFFICULTY = 2
@@ -61,4 +69,68 @@ export const useEngineGameStarted = () => {
     gameStarted: state.gameStarted,
     setGameStarted: state.actions.setGameStarted,
   }))
+}
+
+export const useEngineDifficulty = () => {
+  return usePersistStore(useEngineGameStore, (state) => ({
+    difficulty: state.difficulty,
+    setDifficulty: state.actions.setDifficulty,
+  }))
+}
+
+export const usePlayerColor = () => {
+  return usePersistStore(useEngineGameStore, (state) => ({
+    playerColor: state.playerColor,
+    setPlayerColor: state.actions.setPlayerColor,
+  }))
+}
+
+export const useEngine = () => {
+  const [engine, setEngine] = useState<Engine>()
+  const { playerColor } = usePlayerColor()
+
+  useEffect(() => {
+    setEngine(new Engine(new Worker("/stockfish.js")))
+  }, [])
+
+  const executeEngineMove = useCallback(
+    ({
+      engine,
+      game,
+      setGame,
+      difficulty,
+    }: {
+      engine?: Engine
+      difficulty: number
+      game: Chess
+      setGame: Dispatch<SetStateAction<Chess>>
+    }) => {
+      if (!engine) return
+      if (game.turn() === playerColor) return
+
+      const removeMessageListener = engine.onMessage(({ bestMove }) => {
+        if (bestMove) {
+          game.move({
+            from: bestMove.substring(0, 2),
+            to: bestMove.substring(2, 4),
+            promotion: bestMove.substring(4, 5),
+          })
+
+          const timeoutId = setTimeout(() => {
+            setGame(() => {
+              // so the event listeners won't pile up
+              removeMessageListener()
+              clearTimeout(timeoutId)
+              return new Chess(game.fen())
+            })
+          }, 500)
+        }
+      })
+
+      engine.evaluatePosition(game.fen(), difficulty)
+    },
+    []
+  )
+
+  return { engine, executeEngineMove }
 }
