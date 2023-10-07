@@ -18,6 +18,7 @@ import {
   useEnginePlayerColor,
 } from "@/hooks/engine-game-settings"
 import { DeviceSpecificChessboardProps } from "./types"
+import GameOverDialog from "../game-over-dialog"
 
 export default function BrowserChessboard({
   mode,
@@ -109,13 +110,16 @@ export default function BrowserChessboard({
   }
 
   return (
-    <ReactChessboard
-      position={game.fen()}
-      onPieceDrop={handlePieceDrop}
-      onPieceDragBegin={handleOnPieceDragBegin}
-      onSquareClick={handleOnSquareClick}
-      customSquareStyles={customSquareStyles}
-      {...sharedProps}
-    />
+    <>
+      <ReactChessboard
+        position={game.fen()}
+        onPieceDrop={handlePieceDrop}
+        onPieceDragBegin={handleOnPieceDragBegin}
+        onSquareClick={handleOnSquareClick}
+        customSquareStyles={customSquareStyles}
+        {...sharedProps}
+      />
+      <GameOverDialog game={game} />
+    </>
   )
 }

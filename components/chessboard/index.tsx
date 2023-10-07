@@ -29,6 +29,10 @@ export default function Chessboard({
       <Loading />
     )
   } else {
-    return isMobile ? <MobileChessboard mode={mode} /> : <BrowserChessboard mode={mode} />
+    return isMobile ? (
+      <MobileChessboard mode={mode} />
+    ) : (
+      <BrowserChessboard mode={mode} />
+    )
   }
 }

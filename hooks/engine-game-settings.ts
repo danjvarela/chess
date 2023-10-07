@@ -106,25 +106,27 @@ export const useEngine = () => {
       setGame: Dispatch<SetStateAction<Chess>>
     }) => {
       if (!engine) return
-      if (game.turn() === playerColor) return
+      if (!game.isGameOver() && game.turn() === playerColor) return
 
       const removeMessageListener = engine.onMessage(({ bestMove }) => {
-        if (bestMove) {
-          game.move({
-            from: bestMove.substring(0, 2),
-            to: bestMove.substring(2, 4),
-            promotion: bestMove.substring(4, 5),
-          })
-
-          const timeoutId = setTimeout(() => {
-            setGame(() => {
-              // so the event listeners won't pile up
-              removeMessageListener()
-              clearTimeout(timeoutId)
-              return new Chess(game.fen())
+        try {
+          if (bestMove) {
+            game.move({
+              from: bestMove.substring(0, 2),
+              to: bestMove.substring(2, 4),
+              promotion: bestMove.substring(4, 5),
             })
-          }, 500)
-        }
+
+            const timeoutId = setTimeout(() => {
+              setGame(() => {
+                // so the event listeners won't pile up
+                removeMessageListener()
+                clearTimeout(timeoutId)
+                return new Chess(game.fen())
+              })
+            }, 500)
+          }
+        } catch (err) {}
       })
 
       engine.evaluatePosition(game.fen(), difficulty)
