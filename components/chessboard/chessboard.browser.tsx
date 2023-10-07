@@ -1,7 +1,7 @@
 "use client"
 
 import { Chessboard as ReactChessboard } from "react-chessboard"
-import { useCallback, useEffect, useMemo, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { Chess } from "chess.js"
 import {
   CustomSquareStyles,
