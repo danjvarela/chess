@@ -1,14 +1,42 @@
+import {
+  MAX_ENGINE_DIFFICULTY,
+  MIN_ENGINE_DIFFICULTY,
+  useEngineDifficulty,
+} from "@/hooks/engine-game"
 import { Button, Slider, TextField } from "@radix-ui/themes"
+import clamp from "lodash/clamp"
 
 export default function GameSettings() {
+  const { difficulty, setDifficulty } = useEngineDifficulty()
+  const { playerColor, setPlayerColor } = useEnginePlayerColor()
+
   return (
     <>
       <div className="flex flex-col gap-4 w-full">
         <span>Difficulty</span>
         <div className="flex gap-4 items-center">
-          <Slider defaultValue={[40]} max={100} className="flex-1" />
+          <Slider
+            value={[difficulty]}
+            min={MIN_ENGINE_DIFFICULTY}
+            max={MAX_ENGINE_DIFFICULTY}
+            className="flex-1"
+            onValueChange={(value) => {
+              setDifficulty(value[0])
+            }}
+          />
           <TextField.Root className="w-16">
-            <TextField.Input type="number" max={100} min={0} />
+            <TextField.Input
+              type="number"
+              value={difficulty}
+              onChange={(e) => {
+                const num = parseInt(e.target.value)
+                setDifficulty(
+                  clamp(num, MIN_ENGINE_DIFFICULTY, MAX_ENGINE_DIFFICULTY)
+                )
+              }}
+              max={MAX_ENGINE_DIFFICULTY}
+              min={MIN_ENGINE_DIFFICULTY}
+            />
           </TextField.Root>
         </div>
       </div>

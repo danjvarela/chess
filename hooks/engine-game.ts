@@ -13,7 +13,9 @@ import {
 import Engine from "@/utils/chess-engine"
 
 const DEFAULT_FEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
-const DEFAULT_ENGINE_DIFFICULTY = 2
+
+export const MIN_ENGINE_DIFFICULTY = 2
+export const MAX_ENGINE_DIFFICULTY = 10
 
 export type EngineGameSettings = {
   fen: string
@@ -37,7 +39,7 @@ const useEngineGameStore = create<EngineGameSettings>()(
       (set) => ({
         fen: DEFAULT_FEN,
         gameStarted: false,
-        difficulty: DEFAULT_ENGINE_DIFFICULTY,
+        difficulty: MIN_ENGINE_DIFFICULTY,
         playerColor: "w",
         gameOver: false,
         actions: {
