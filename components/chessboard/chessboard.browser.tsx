@@ -16,7 +16,7 @@ import {
   useEngineDifficulty,
   useEngineFen,
   useEnginePlayerColor,
-} from "@/hooks/engine-game-settings"
+} from "@/hooks/engine-game"
 import { DeviceSpecificChessboardProps } from "./types"
 import GameOverDialog from "../game-over-dialog"
 

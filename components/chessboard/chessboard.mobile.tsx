@@ -20,7 +20,7 @@ import {
   useEngineDifficulty,
   useEngineFen,
   useEnginePlayerColor,
-} from "@/hooks/engine-game-settings"
+} from "@/hooks/engine-game"
 import { DeviceSpecificChessboardProps } from "./types"
 
 export default function MobileChessboard({
