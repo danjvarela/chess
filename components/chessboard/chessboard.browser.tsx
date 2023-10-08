@@ -4,7 +4,6 @@ import { Chessboard as ReactChessboard } from "react-chessboard"
 import { useCallback, useEffect, useState } from "react"
 import { Chess } from "chess.js"
 import {
-  BoardOrientation,
   CustomSquareStyles,
   Piece,
   Square,
@@ -16,6 +15,7 @@ import {
   useEngine,
   useEngineDifficulty,
   useEngineFen,
+  useEngineGameStarted,
   useEnginePlayerColor,
 } from "@/hooks/engine-game"
 import { DeviceSpecificChessboardProps } from "./types"
@@ -32,6 +32,7 @@ export default function BrowserChessboard({
   const { engine, executeEngineMove } = useEngine()
   const { difficulty } = useEngineDifficulty()
   const { playerColor } = useEnginePlayerColor()
+  const { gameStarted } = useEngineGameStarted()
   const vsEngine = mode === "vsEngine"
 
   const handleOnSquareClick = useCallback(
@@ -114,6 +115,7 @@ export default function BrowserChessboard({
     <>
       <ReactChessboard
         position={game.fen()}
+        arePiecesDraggable={gameStarted || !game.isGameOver()}
         onPieceDrop={handlePieceDrop}
         onPieceDragBegin={handleOnPieceDragBegin}
         onSquareClick={handleOnSquareClick}

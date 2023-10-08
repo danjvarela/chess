@@ -20,6 +20,7 @@ import {
   useEngine,
   useEngineDifficulty,
   useEngineFen,
+  useEngineGameStarted,
   useEnginePlayerColor,
 } from "@/hooks/engine-game"
 import { DeviceSpecificChessboardProps } from "./types"
@@ -36,6 +37,7 @@ export default function MobileChessboard({
   const { playerColor } = useEnginePlayerColor()
   const { engine, executeEngineMove } = useEngine()
   const { difficulty } = useEngineDifficulty()
+  const { gameStarted } = useEngineGameStarted()
   const vsEngine = mode === "vsEngine"
 
   const [customSquareStyles, setCustomSquareStyles] =
@@ -63,6 +65,8 @@ export default function MobileChessboard({
   )
 
   const handleOnSquareClick = (square: Square) => {
+    if (!gameStarted || game.isGameOver()) return
+    
     const pieceOnClickedSquare = game.get(square)
 
     const foundMove = game
