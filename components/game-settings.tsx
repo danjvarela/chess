@@ -2,6 +2,7 @@ import {
   MAX_ENGINE_DIFFICULTY,
   MIN_ENGINE_DIFFICULTY,
   useEngineDifficulty,
+  useEnginePlayerColor,
 } from "@/hooks/engine-game"
 import { Button, Slider, TextField } from "@radix-ui/themes"
 import clamp from "lodash/clamp"
@@ -44,8 +45,18 @@ export default function GameSettings() {
       <div className="flex flex-col gap-4 w-full">
         <span>Play as</span>
         <div className="flex w-full gap-4">
-          <Button className="flex-1">White</Button>
-          <Button className="flex-1" variant="outline">
+          <Button
+            className="flex-1"
+            variant={playerColor === "w" ? "solid" : "outline"}
+            onClick={() => setPlayerColor("w")}
+          >
+            White
+          </Button>
+          <Button
+            className="flex-1"
+            variant={playerColor === "b" ? "solid" : "outline"}
+            onClick={() => setPlayerColor("b")}
+          >
             Black
           </Button>
         </div>

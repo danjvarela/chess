@@ -4,6 +4,7 @@ import { Chessboard as ReactChessboard } from "react-chessboard"
 import { useCallback, useEffect, useState } from "react"
 import { Chess } from "chess.js"
 import {
+  BoardOrientation,
   CustomSquareStyles,
   Piece,
   Square,
@@ -117,6 +118,7 @@ export default function BrowserChessboard({
         onPieceDragBegin={handleOnPieceDragBegin}
         onSquareClick={handleOnSquareClick}
         customSquareStyles={customSquareStyles}
+        boardOrientation={playerColor === "w" ? "white" : "black"}
         {...sharedProps}
       />
       <GameOverDialog game={game} />

@@ -9,6 +9,7 @@ import {
 } from "./sharedProps"
 import { useCallback, useEffect, useState } from "react"
 import {
+  BoardOrientation,
   CustomSquareStyles,
   PromotionPieceOption,
 } from "react-chessboard/dist/chessboard/types"
@@ -163,6 +164,7 @@ export default function MobileChessboard({
       showPromotionDialog={showPromotionDialog}
       promotionToSquare={promotionToSquare}
       onPromotionPieceSelect={handleOnPromotionPieceSelect}
+      boardOrientation={playerColor === "w" ? "white" : "black"}
       {...sharedProps}
     />
   )
