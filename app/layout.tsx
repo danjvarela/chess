@@ -22,14 +22,10 @@ export default async function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body>
         <Providers session={session}>
-          {session ? (
-            <div className="container mx-auto min-h-screen flex flex-col">
-              {children}
-              <Footer />
-            </div>
-          ) : (
-            <Login />
-          )}
+          <div className="container mx-auto min-h-screen flex flex-col">
+            {session ? children : <Login />}
+            <Footer />
+          </div>
         </Providers>
       </body>
     </html>
