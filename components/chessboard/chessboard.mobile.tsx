@@ -7,38 +7,22 @@ import {
   possibleMoveStyle,
   sharedProps,
 } from "./sharedProps"
-import { useCallback, useEffect, useState } from "react"
+import { useCallback, useState } from "react"
 import {
-  BoardOrientation,
   CustomSquareStyles,
   PromotionPieceOption,
 } from "react-chessboard/dist/chessboard/types"
 import { Square, Chess, PieceSymbol } from "chess.js"
-import { useIsClient } from "usehooks-ts"
 import Loading from "@/app/loading"
-import {
-  useEngine,
-  useEngineDifficulty,
-  useEngineFen,
-  useEngineGameStarted,
-  useEnginePlayerColor,
-} from "@/hooks/engine-game"
 import { DeviceSpecificChessboardProps } from "./types"
 
 export default function MobileChessboard({
   mode,
 }: DeviceSpecificChessboardProps) {
-  const { fen, setFen } = useEngineFen()
-  const [game, setGame] = useState(new Chess(fen))
+  const [game, setGame] = useState(new Chess())
   const [showPromotionDialog, setShowPromotionDialog] = useState(false)
   const [moveFrom, setMoveFrom] = useState<Square>()
   const [promotionToSquare, setPromotionToSquare] = useState<Square>()
-  const isClient = useIsClient()
-  const { playerColor } = useEnginePlayerColor()
-  const { engine, executeEngineMove } = useEngine()
-  const { difficulty } = useEngineDifficulty()
-  const { gameStarted } = useEngineGameStarted()
-  const vsEngine = mode === "vsEngine"
 
   const [customSquareStyles, setCustomSquareStyles] =
     useState<CustomSquareStyles>()
@@ -52,12 +36,9 @@ export default function MobileChessboard({
 
   const makeMove = useCallback(
     (from: Square, to: Square, promotion?: PieceSymbol) => {
-      // prevent player from making a move on behalf of the engine
-      if (vsEngine && game.turn() !== playerColor) return
-
       try {
         game.move({ from, to, promotion })
-        setFen(game.fen())
+        setGame(new Chess(game.fen()))
         reset()
       } catch (err) {}
     },
@@ -65,8 +46,6 @@ export default function MobileChessboard({
   )
 
   const handleOnSquareClick = (square: Square) => {
-    if (!gameStarted || game.isGameOver()) return
-    
     const pieceOnClickedSquare = game.get(square)
 
     const foundMove = game
@@ -144,20 +123,6 @@ export default function MobileChessboard({
     return true
   }
 
-  useEffect(() => {
-    setGame(new Chess(fen))
-  }, [fen])
-
-  useEffect(() => {
-    if (vsEngine && game.turn() !== playerColor) {
-      executeEngineMove({ engine, game, setGame, difficulty })
-    }
-  }, [game, vsEngine, difficulty, engine])
-
-  if (!isClient) {
-    return <Loading />
-  }
-
   return (
     <ReactChessboard
       position={game.fen()}
@@ -168,7 +133,6 @@ export default function MobileChessboard({
       showPromotionDialog={showPromotionDialog}
       promotionToSquare={promotionToSquare}
       onPromotionPieceSelect={handleOnPromotionPieceSelect}
-      boardOrientation={playerColor === "w" ? "white" : "black"}
       {...sharedProps}
     />
   )

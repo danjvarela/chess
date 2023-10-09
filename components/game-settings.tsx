@@ -1,15 +1,14 @@
-import {
-  MAX_ENGINE_DIFFICULTY,
-  MIN_ENGINE_DIFFICULTY,
-  useEngineDifficulty,
-  useEnginePlayerColor,
-} from "@/hooks/engine-game"
 import { Button, Slider, TextField } from "@radix-ui/themes"
+import { Color } from "chess.js"
 import clamp from "lodash/clamp"
+import { useState } from "react"
+
+const MIN_ENGINE_DIFFICULTY = 2
+const MAX_ENGINE_DIFFICULTY = 24
 
 export default function GameSettings() {
-  const { difficulty, setDifficulty } = useEngineDifficulty()
-  const { playerColor, setPlayerColor } = useEnginePlayerColor()
+  const [difficulty, setDifficulty] = useState(MIN_ENGINE_DIFFICULTY)
+  const [playerColor, setPlayerColor] = useState<Color>("w")
 
   return (
     <>

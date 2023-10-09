@@ -1,39 +1,22 @@
 "use client"
 
 import { Chessboard as ReactChessboard } from "react-chessboard"
-import { useCallback, useEffect, useState } from "react"
-import { Chess } from "chess.js"
+import { useCallback, useState, useRef } from "react"
 import {
   CustomSquareStyles,
   Piece,
   Square,
 } from "react-chessboard/dist/chessboard/types"
 import { kingCheckedStyle, possibleMoveStyle, sharedProps } from "./sharedProps"
-import { useIsClient } from "usehooks-ts"
-import Loading from "@/app/loading"
-import {
-  useEngine,
-  useEngineDifficulty,
-  useEngineFen,
-  useEngineGameStarted,
-  useEnginePlayerColor,
-} from "@/hooks/engine-game"
 import { DeviceSpecificChessboardProps } from "./types"
-import GameOverDialog from "../game-over-dialog"
+import { Chess } from "chess.js"
 
 export default function BrowserChessboard({
   mode,
 }: DeviceSpecificChessboardProps) {
-  const { fen, setFen } = useEngineFen()
-  const [game, setGame] = useState(new Chess(fen))
+  const [game, setGame] = useState(new Chess())
   const [customSquareStyles, setCustomSquareStyles] =
     useState<CustomSquareStyles>({})
-  const isClient = useIsClient()
-  const { engine, executeEngineMove } = useEngine()
-  const { difficulty } = useEngineDifficulty()
-  const { playerColor } = useEnginePlayerColor()
-  const { gameStarted } = useEngineGameStarted()
-  const vsEngine = mode === "vsEngine"
 
   const handleOnSquareClick = useCallback(
     (square: Square) => {
@@ -65,9 +48,6 @@ export default function BrowserChessboard({
 
   const handlePieceDrop = useCallback(
     (sourceSquare: Square, targetSquare: Square, piece: Piece) => {
-      // prevent player from making a move on behalf of the engine
-      if (vsEngine && game.turn() !== playerColor) return false
-
       try {
         game.move({
           from: sourceSquare,
@@ -75,7 +55,7 @@ export default function BrowserChessboard({
           promotion: piece[1].toLowerCase() ?? "q",
         })
 
-        setFen(game.fen())
+        setGame(new Chess(game.fen()))
         setCustomSquareStyles({})
         return true
       } catch (err) {
@@ -94,36 +74,17 @@ export default function BrowserChessboard({
         return false
       }
     },
-    [game, engine]
+    [game]
   )
 
-  useEffect(() => {
-    setGame(new Chess(fen))
-  }, [fen])
-
-  useEffect(() => {
-    if (vsEngine && game.turn() !== playerColor) {
-      executeEngineMove({ engine, game, setGame, difficulty })
-    }
-  }, [game, vsEngine, difficulty, engine])
-
-  if (!isClient) {
-    return <Loading />
-  }
-
   return (
-    <>
-      <ReactChessboard
-        position={game.fen()}
-        arePiecesDraggable={gameStarted || !game.isGameOver()}
-        onPieceDrop={handlePieceDrop}
-        onPieceDragBegin={handleOnPieceDragBegin}
-        onSquareClick={handleOnSquareClick}
-        customSquareStyles={customSquareStyles}
-        boardOrientation={playerColor === "w" ? "white" : "black"}
-        {...sharedProps}
-      />
-      <GameOverDialog game={game} />
-    </>
+    <ReactChessboard
+      position={game.fen()}
+      onPieceDrop={handlePieceDrop}
+      onPieceDragBegin={handleOnPieceDragBegin}
+      onSquareClick={handleOnSquareClick}
+      customSquareStyles={customSquareStyles}
+      {...sharedProps}
+    />
   )
 }

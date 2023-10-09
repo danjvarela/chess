@@ -5,8 +5,6 @@ import MobileChessboard from "./chessboard.mobile"
 import BrowserChessboard from "./chessboard.browser"
 import { Chessboard as ReactChessboard } from "react-chessboard"
 import { sharedProps } from "./sharedProps"
-import { useIsClient } from "usehooks-ts"
-import Loading from "@/app/loading"
 import { GameMode } from "./types"
 
 export default function Chessboard({
@@ -16,17 +14,13 @@ export default function Chessboard({
   unplayable?: boolean
   mode?: GameMode
 }) {
-  const isClient = useIsClient()
-
   if (unplayable) {
-    return isClient ? (
+    return (
       <ReactChessboard
         arePiecesDraggable={false}
         areArrowsAllowed={false}
         {...sharedProps}
       />
-    ) : (
-      <Loading />
     )
   } else {
     return isMobile ? (
