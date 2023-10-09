@@ -3,25 +3,33 @@ import "@radix-ui/themes/styles.css"
 import type { Metadata } from "next"
 import Providers from "./providers"
 import Footer from "@/components/footer"
+import { getServerSession } from "next-auth"
+import { authOptions } from "@/utils/auth"
+import Login from "./login/page"
 
 export const metadata: Metadata = {
   title: "Chess",
   description: "A simple chess app",
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
+  const session = await getServerSession(authOptions)
   return (
     <html lang="en" suppressHydrationWarning>
       <body>
-        <Providers>
-          <div className="container mx-auto min-h-screen flex flex-col">
-            {children}
-            <Footer />
-          </div>
+        <Providers session={session}>
+          {session ? (
+            <div className="container mx-auto min-h-screen flex flex-col">
+              {children}
+              <Footer />
+            </div>
+          ) : (
+            <Login />
+          )}
         </Providers>
       </body>
     </html>

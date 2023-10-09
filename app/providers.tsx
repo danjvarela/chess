@@ -2,11 +2,19 @@
 
 import { PropsWithChildren } from "react"
 import { Theme } from "@radix-ui/themes"
+import { SessionProvider } from "next-auth/react"
+import { Session } from "next-auth"
 
-export default function Providers({ children }: PropsWithChildren) {
+type Props = PropsWithChildren & {
+  session: Session | null
+}
+
+export default function Providers({ children }: Props) {
   return (
-    <Theme appearance="dark" accentColor="jade">
-      {children}
-    </Theme>
+    <SessionProvider>
+      <Theme appearance="dark" accentColor="jade">
+        {children}
+      </Theme>
+    </SessionProvider>
   )
 }
