@@ -1,20 +1,24 @@
-"use client"
-
-import { db } from "@/utils/firebase"
-import { Button } from "@radix-ui/themes"
-import { collection, query } from "firebase/firestore"
-import { signOut, useSession } from "next-auth/react"
-import { useCollection } from "react-firebase-hooks/firestore"
+import ChessboardLink from "@/components/chessboard-link"
 
 export default function Home() {
-  const session = useSession()
-  const [users, loading, error] = useCollection(query(collection(db, "users")))
-
   return (
-    <div className="w-[300px]">
-      {users?.docs[0].data().email}
-      <div>{session?.data?.user?.email}</div>
-      <Button onClick={() => signOut()}>Signout</Button>
+    <div className="w-full h-full pt-8 md:pt-32">
+      <div className="w-full flex flex-col items-center">
+        <div className="flex flex-col md:flex-row mt-12 gap-8">
+          <div className="w-[300px]">
+            <div className="text-center font-bold mb-4">vs Computer</div>
+            <ChessboardLink
+              className="w-full h-[300px]"
+              href="/games/vs-computer"
+            />
+          </div>
+
+          <div className="w-[300px]">
+            <div className="text-center font-bold mb-4">Play a Friend</div>
+            <ChessboardLink className="w-full h-[300px]" href="#" />
+          </div>
+        </div>
+      </div>
     </div>
   )
 }

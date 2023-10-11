@@ -5,7 +5,6 @@ import Providers from "./providers"
 import Footer from "@/components/footer"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/utils/auth"
-import Login from "./login/page"
 
 export const metadata: Metadata = {
   title: "Chess",
@@ -23,7 +22,7 @@ export default async function RootLayout({
       <body>
         <Providers session={session}>
           <div className="container mx-auto min-h-screen flex flex-col">
-            {session ? children : <Login />}
+            {children}
             <Footer />
           </div>
         </Providers>
