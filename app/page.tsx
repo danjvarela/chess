@@ -1,21 +1,33 @@
 import ChessboardLink from "@/components/chessboard-link"
+import Navigation from "@/components/navigation"
+import cn from "@/utils/cn"
 
 export default function Home() {
   return (
-    <div className="w-full h-full pt-8 md:pt-32">
+    <div
+      className={cn(
+        "w-full h-full pt-8 max-w-md mx-auto",
+        "flex flex-col items-center px-4",
+        "md:pt-32 md:max-w-xl md:px-0"
+      )}
+    >
+      <Navigation />
+
       <div className="w-full flex flex-col items-center">
-        <div className="flex flex-col md:flex-row mt-12 gap-8">
-          <div className="w-[300px]">
+        <div
+          className={cn(
+            "w-full flex flex-col items-center mt-12 gap-8",
+            "md:flex-row md:justify-between"
+          )}
+        >
+          <div className="w-full max-w-xs">
             <div className="text-center font-bold mb-4">vs Computer</div>
-            <ChessboardLink
-              className="w-full h-[300px]"
-              href="/games/vs-computer"
-            />
+            <ChessboardLink className="w-full" href="/games/vs-computer" />
           </div>
 
-          <div className="w-[300px]">
+          <div className="w-full max-w-xs md:max-w-xs">
             <div className="text-center font-bold mb-4">Play a Friend</div>
-            <ChessboardLink className="w-full h-[300px]" href="#" />
+            <ChessboardLink className="w-full" href="#" />
           </div>
         </div>
       </div>
