@@ -4,7 +4,7 @@ import Logo from "@/components/logo"
 import { Button, Card } from "@radix-ui/themes"
 import { signIn } from "next-auth/react"
 import { useSearchParams } from "next/navigation"
-import { AiOutlineArrowLeft } from "react-icons/ai"
+import { AiOutlineArrowLeft } from "@react-icons/all-files/ai/AiOutlineArrowLeft"
 import Link from "@/components/ui/link"
 
 export default function Login() {

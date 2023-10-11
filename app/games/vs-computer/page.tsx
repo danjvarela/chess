@@ -5,7 +5,7 @@ import GameSettings from "@/components/game-settings"
 import Link from "@/components/ui/link"
 import cn from "@/utils/cn"
 import { Card } from "@radix-ui/themes"
-import { AiOutlineArrowLeft } from "react-icons/ai"
+import { AiOutlineArrowLeft } from "@react-icons/all-files/ai/AiOutlineArrowLeft"
 
 export default function VsComputer() {
   return (
@@ -16,7 +16,12 @@ export default function VsComputer() {
       )}
     >
       <div className="flex justify-between w-full items-center">
-        <Link color="gray" href="/" className="flex items-center gap-2" size="2">
+        <Link
+          color="gray"
+          href="/"
+          className="flex items-center gap-2"
+          size="2"
+        >
           <AiOutlineArrowLeft />
           Go back home
         </Link>

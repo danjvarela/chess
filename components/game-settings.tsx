@@ -3,7 +3,7 @@ import { Color } from "chess.js"
 import clamp from "lodash/clamp"
 import { useState } from "react"
 import { Dialog } from "@radix-ui/themes"
-import { AiOutlineSetting } from "react-icons/ai"
+import { AiOutlineSetting } from "@react-icons/all-files/ai/AiOutlineSetting"
 
 const MIN_ENGINE_DIFFICULTY = 2
 const MAX_ENGINE_DIFFICULTY = 24

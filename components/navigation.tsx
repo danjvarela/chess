@@ -4,7 +4,7 @@ import { signOut, useSession } from "next-auth/react"
 import Logo from "./logo"
 import { Text } from "@radix-ui/themes"
 import { usePathname } from "next/navigation"
-import { AiOutlineLoading } from "react-icons/ai"
+import { AiOutlineLoading } from "@react-icons/all-files/ai/AiOutlineLoading"
 import Link from "@/components/ui/link"
 
 export default function Navigation() {
