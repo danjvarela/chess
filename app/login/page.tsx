@@ -16,14 +16,14 @@ export default function Login() {
               onClick={() => signIn("google")}
               className="w-full"
             >
-              Login with Google
+              Continue with Google
             </Button>
             <Button
               size="3"
               onClick={() => signIn("facebook")}
               className="w-full"
             >
-              Login with Facebook
+              Continue with Facebook
             </Button>
           </div>
         </div>
