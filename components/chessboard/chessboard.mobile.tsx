@@ -13,7 +13,6 @@ import {
   PromotionPieceOption,
 } from "react-chessboard/dist/chessboard/types"
 import { Square, Chess, PieceSymbol } from "chess.js"
-import Loading from "@/app/loading"
 import { DeviceSpecificChessboardProps } from "./types"
 
 export default function MobileChessboard({
