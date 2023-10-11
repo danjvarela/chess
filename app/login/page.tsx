@@ -15,7 +15,9 @@ export default function Login() {
       <Card className="w-[300px]" size="4" variant="ghost">
         <div className="w-full flex flex-col items-center gap-12">
           <div className="flex flex-col items-center gap-4">
-            <Logo />
+            <Link href="/">
+              <Logo />
+            </Link>
             <Link
               className="flex gap-2 items-center"
               color="gray"

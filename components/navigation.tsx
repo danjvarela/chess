@@ -21,7 +21,7 @@ export default function Navigation() {
   const authLink = (() => {
     if (!session || isGuest)
       return (
-        <Link href={`/login?from=${pathname}`}>Login / Create an account</Link>
+        <Link href={`/login?from=${pathname}`}>Continue with an account</Link>
       )
 
     return (
@@ -39,7 +39,9 @@ export default function Navigation() {
 
   return (
     <div className="w-full flex flex-col items-center justify-center">
-      <Logo className="mb-4" />
+      <Link href="/">
+        <Logo className="mb-4" />
+      </Link>
       {session.status === "loading" ? (
         <AiOutlineLoading className="animate-spin" />
       ) : (
