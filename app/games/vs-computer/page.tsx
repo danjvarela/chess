@@ -2,8 +2,10 @@
 
 import Chessboard from "@/components/chessboard"
 import GameSettings from "@/components/game-settings"
+import Link from "@/components/ui/link"
 import cn from "@/utils/cn"
 import { Card } from "@radix-ui/themes"
+import { AiOutlineArrowLeft } from "react-icons/ai"
 
 export default function VsComputer() {
   return (
@@ -13,7 +15,11 @@ export default function VsComputer() {
         "md:max-w-2xl mx-auto"
       )}
     >
-      <div className="flex justify-end w-full">
+      <div className="flex justify-between w-full items-center">
+        <Link color="gray" href="/" className="flex items-center gap-2" size="2">
+          <AiOutlineArrowLeft />
+          Go back home
+        </Link>
         <GameSettings />
       </div>
 

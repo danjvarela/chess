@@ -22,12 +22,18 @@ export default function Home() {
         >
           <div className="w-full max-w-xs">
             <div className="text-center font-bold mb-4">vs Computer</div>
-            <ChessboardLink className="w-full" href="/games/vs-computer" />
+            <ChessboardLink
+              className="w-full aspect-square bg-sage-50"
+              href="/games/vs-computer"
+            />
           </div>
 
           <div className="w-full max-w-xs md:max-w-xs">
             <div className="text-center font-bold mb-4">Play a Friend</div>
-            <ChessboardLink className="w-full" href="#" />
+            <ChessboardLink
+              className="w-full aspect-square bg-sage-50"
+              href="#"
+            />
           </div>
         </div>
       </div>
