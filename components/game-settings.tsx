@@ -1,3 +1,5 @@
+"use client"
+
 import { Button, Slider, TextField } from "@radix-ui/themes"
 import { Color } from "chess.js"
 import clamp from "lodash/clamp"
