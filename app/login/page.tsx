@@ -21,7 +21,7 @@ export default function Login() {
             <Link
               className="flex gap-2 items-center"
               color="gray"
-              href={searchParams.get("from") ?? ""}
+              href={searchParams.get("from") ?? "/"}
             >
               <AiOutlineArrowLeft />
               Go back
