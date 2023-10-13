@@ -20,7 +20,7 @@ export default function AuthHandler() {
     if (isAuthenticated && isAuthPath && !isGuest) {
       redirect(searchParams.get("from") ?? "/")
     }
-  }, [isAuthenticated, isAuthPath, isGuest])
+  }, [isAuthenticated, isAuthPath, isGuest, searchParams])
 
   return null
 }
