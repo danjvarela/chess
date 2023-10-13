@@ -9,17 +9,18 @@ import Link from "@/components/ui/link"
 
 export default function Navigation() {
   const session = useSession()
-  const isGuest = session?.data?.isGuest
-  const name = session?.data?.user?.name
+  const isGuest = session.data?.isGuest
+  const name = session.data?.user?.name
   const pathname = usePathname()
 
   const loginMessage = (() => {
+    if (session.status === "loading") return ""
     if (isGuest) return "Logged in as Guest"
     return `Logged in as ${name}`
   })()
 
   const authLink = (() => {
-    if (!session || isGuest)
+    if (session.status !== "authenticated" || isGuest)
       return (
         <Link href={`/login?from=${pathname}`}>Continue with an account</Link>
       )
