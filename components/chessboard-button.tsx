@@ -1,16 +1,15 @@
 import { Card } from "@radix-ui/themes"
 import Chessboard from "./chessboard"
-import Link from "next/link"
 
-export default function ChessboardLink({
+export default function ChessboardButton({
   className,
   ...props
-}: React.ComponentProps<typeof Link>) {
+}: React.ComponentProps<"button">) {
   return (
     <Card asChild>
-      <Link className={className} {...props}>
+      <button className={className} {...props}>
         <Chessboard unplayable />
-      </Link>
+      </button>
     </Card>
   )
 }

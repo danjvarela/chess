@@ -1,4 +1,4 @@
-import ChessboardLink from "@/components/chessboard-link"
+import ChessboardButton from "@/components/chessboard-button"
 import Navigation from "@/components/navigation"
 import cn from "@/utils/cn"
 
@@ -22,18 +22,12 @@ export default function Home() {
         >
           <div className="w-full max-w-xs">
             <div className="text-center font-bold mb-4">vs Computer</div>
-            <ChessboardLink
-              className="w-full aspect-square bg-sage-50"
-              href="/games/vs-computer"
-            />
+            <ChessboardButton className="w-full aspect-square bg-sage-50" />
           </div>
 
           <div className="w-full max-w-xs md:max-w-xs">
             <div className="text-center font-bold mb-4">Play a Friend</div>
-            <ChessboardLink
-              className="w-full aspect-square bg-sage-50"
-              href="#"
-            />
+            <ChessboardButton className="w-full aspect-square bg-sage-50" />
           </div>
         </div>
       </div>
