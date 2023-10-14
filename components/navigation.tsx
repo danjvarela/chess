@@ -4,8 +4,8 @@ import { signOut, useSession } from "next-auth/react"
 import Logo from "./logo"
 import { Text } from "@radix-ui/themes"
 import { usePathname } from "next/navigation"
-import { AiOutlineLoading } from "@react-icons/all-files/ai/AiOutlineLoading"
 import Link from "@/components/ui/link"
+import Spinner from "./ui/spinner"
 
 export default function Navigation() {
   const session = useSession()
@@ -15,7 +15,7 @@ export default function Navigation() {
 
   const loginMessage = (() => {
     if (isGuest) return "Logged in as Guest"
-    if (!name) return ""
+    if (!name) return
     return `Logged in as ${name}`
   })()
 
@@ -43,8 +43,8 @@ export default function Navigation() {
       <Link href="/">
         <Logo className="mb-4" />
       </Link>
-      {session.status === "loading" ? (
-        <AiOutlineLoading className="animate-spin" />
+      {session.status === "loading" || !loginMessage ? (
+        <Spinner className="w-4 h-4" />
       ) : (
         <div className="flex flex-col items-center gap-1">
           <Text color="gray">{loginMessage}</Text>
