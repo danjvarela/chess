@@ -14,8 +14,8 @@ export default function Navigation() {
   const pathname = usePathname()
 
   const loginMessage = (() => {
-    if (session.status === "loading") return ""
     if (isGuest) return "Logged in as Guest"
+    if (!name) return ""
     return `Logged in as ${name}`
   })()
 
