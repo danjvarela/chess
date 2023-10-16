@@ -1,5 +1,5 @@
-export type GameMode = "vsEngine" | "vsFriend" | "configurable"
+import { GameMode } from "@/types/games"
 
 export type DeviceSpecificChessboardProps = {
-  mode: GameMode
+  mode: GameMode | "configurable"
 }

@@ -3,25 +3,69 @@
 import { Button, Slider, TextField } from "@radix-ui/themes"
 import { Color } from "chess.js"
 import clamp from "lodash/clamp"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Dialog } from "@radix-ui/themes"
-import { AiOutlineSetting } from "@react-icons/all-files/ai/AiOutlineSetting"
+import { useSession } from "next-auth/react"
+import { useCreateGame } from "@/hooks/games"
+import { Game } from "@/types/games"
+import { DEFAULT_FEN } from "@/utils/constants"
+import { GameMode } from "@/types/games"
+import { useRouter } from "next/navigation"
+import Spinner from "../ui/spinner"
 
 const MIN_ENGINE_DIFFICULTY = 2
 const MAX_ENGINE_DIFFICULTY = 24
 
-export default function GameSettings() {
+type Props = {
+  trigger: JSX.Element
+  mode?: GameMode
+  context?: "beforeGame"
+}
+
+const testData: Game = {
+  whitePlayer: "Alice",
+  blackPlayer: "Bob",
+  whiteRemainingTime: 600, // in seconds
+  blackRemainingTime: 600, // in seconds
+  engineDifficulty: 3, // optional
+  gameStarted: false,
+  gameOver: false,
+  mode: "vsFriend",
+  timeLimit: 900, // in seconds
+  fen: "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR", // example FEN string
+}
+
+export default function GameSettings({ trigger, context, mode }: Props) {
+  const router = useRouter()
   const [difficulty, setDifficulty] = useState(MIN_ENGINE_DIFFICULTY)
   const [playerColor, setPlayerColor] = useState<Color>("w")
+  const session = useSession()
+  const user = session?.data?.user
+  const {
+    mutate: createGame,
+    data: createdGameRef,
+    isLoading: gameCreationInProgress,
+  } = useCreateGame()
+
+  const handleCreateGame = (mode?: GameMode) => {
+    if (!user || !mode) return
+
+    createGame({
+      fen: DEFAULT_FEN,
+      whitePlayer: playerColor === "w" ? user.id : "pending",
+      blackPlayer: playerColor === "b" ? user.id : "pending",
+      mode,
+      timeLimit: 20,
+    })
+  }
+
+  useEffect(() => {
+    if (createdGameRef?.id) router.push(`/games/${createdGameRef.id}`)
+  }, [createdGameRef])
 
   return (
     <Dialog.Root>
-      <Dialog.Trigger>
-        <Button>
-          <AiOutlineSetting />
-          Game Settings
-        </Button>
-      </Dialog.Trigger>
+      <Dialog.Trigger>{trigger}</Dialog.Trigger>
       <Dialog.Content className="!max-w-xs">
         <div className="flex flex-col gap-4 w-full items-center">
           <div className="flex flex-col gap-4 w-full">
@@ -74,11 +118,28 @@ export default function GameSettings() {
           </div>
 
           <div className="flex flex-col gap-4 w-full mt-4">
-            <Button size="3">Start Game</Button>
-            <Button size="3">New Game vs a Friend</Button>
-            <Button size="3" color="gray" variant="soft">
-              Abort Game
+            <Button
+              size="3"
+              disabled={gameCreationInProgress}
+              onClick={() => handleCreateGame(mode)}
+            >
+              {gameCreationInProgress && <Spinner className="w-4 h-4" />}
+              Start Game
             </Button>
+            {context === "beforeGame" ? (
+              <Dialog.Close>
+                <Button size="3" color="gray" variant="soft">
+                  Close
+                </Button>
+              </Dialog.Close>
+            ) : (
+              <>
+                <Button size="3">New Game vs a Friend</Button>
+                <Button size="3" color="gray" variant="soft">
+                  Abort Game
+                </Button>
+              </>
+            )}
           </div>
         </div>
       </Dialog.Content>

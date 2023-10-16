@@ -65,12 +65,12 @@ export const authOptions: AuthOptions = {
   callbacks: {
     async jwt({ token, user }) {
       if (user?.isGuest) token.isGuest = true
+      if (user?.id) token.id = user.id
       return token
     },
     async session({ token, session }) {
-      if (token.isGuest) {
-        session.isGuest = true
-      }
+      if (token.isGuest) session.isGuest = true
+      if (token.id) session.user.id = token.id as string
       return session
     },
   },

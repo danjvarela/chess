@@ -1,5 +1,11 @@
+import { Game } from "@/types/games"
 import { getApp, getApps, initializeApp } from "firebase/app"
-import { getFirestore } from "firebase/firestore"
+import {
+  getFirestore,
+  DocumentData,
+  QueryDocumentSnapshot,
+  collection,
+} from "firebase/firestore"
 
 const firebaseConfig = {
   apiKey: "AIzaSyAz1BNtH1-ao0_PuuA6eOVX6ffH3zZ-bUw",
@@ -13,3 +19,13 @@ const firebaseConfig = {
 
 export const app = getApps().length ? getApp() : initializeApp(firebaseConfig)
 export const db = getFirestore(app)
+
+const typedCollection = <T extends DocumentData>(collectionPath: string) =>
+  collection(db, collectionPath).withConverter<T, DocumentData>({
+    toFirestore: (data: T) => data,
+    fromFirestore: (snap: QueryDocumentSnapshot) => snap.data() as T,
+  })
+
+export const collections = {
+  games: typedCollection<Game>("games"),
+}

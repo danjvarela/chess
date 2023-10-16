@@ -5,15 +5,13 @@ import MobileChessboard from "./chessboard.mobile"
 import BrowserChessboard from "./chessboard.browser"
 import { Chessboard as ReactChessboard } from "react-chessboard"
 import { sharedProps } from "./sharedProps"
-import { GameMode } from "./types"
+import { DeviceSpecificChessboardProps } from "./types"
 
-export default function Chessboard({
-  unplayable,
-  mode = "vsFriend",
-}: {
+type Props = DeviceSpecificChessboardProps & {
   unplayable?: boolean
-  mode?: GameMode
-}) {
+}
+
+export default function Chessboard({ unplayable, mode = "vsFriend" }: Props) {
   if (unplayable) {
     return (
       <ReactChessboard
