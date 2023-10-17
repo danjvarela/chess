@@ -3,28 +3,47 @@
 import { isMobile } from "react-device-detect"
 import MobileChessboard from "./chessboard.mobile"
 import BrowserChessboard from "./chessboard.browser"
-import { Chessboard as ReactChessboard } from "react-chessboard"
-import { sharedProps } from "./sharedProps"
-import { DeviceSpecificChessboardProps } from "./types"
+import { ChessboardProps } from "./types"
+import { useUpdateGame } from "@/hooks/games"
+import { PENDING_PLAYER } from "@/utils/constants"
+import { Color } from "chess.js"
+import { useSession } from "next-auth/react"
+import { useMemo } from "react"
 
-type Props = DeviceSpecificChessboardProps & {
-  unplayable?: boolean
-}
+export default function Chessboard({
+  mode = "vsFriend",
+  id,
+}: Pick<ChessboardProps, "mode" | "id">) {
 
-export default function Chessboard({ unplayable, mode = "vsFriend" }: Props) {
-  if (unplayable) {
-    return (
-      <ReactChessboard
-        arePiecesDraggable={false}
-        areArrowsAllowed={false}
-        {...sharedProps}
-      />
-    )
-  } else {
-    return isMobile ? (
-      <MobileChessboard mode={mode} />
-    ) : (
-      <BrowserChessboard mode={mode} />
-    )
+  // const playerColor: Color = useMemo(() => {
+  //   const playerId = session?.data?.user?.id
+  //
+  //   if (gameData?.mode === "vsEngine") {
+  //     return gameData?.whitePlayer === playerId ? "w" : "b"
+  //   } else {
+  //     if (gameData?.whitePlayer === playerId) return "w"
+  //     if (gameData?.blackPlayer === playerId) return "b"
+  //
+  //     // logged in player is neither black nor white so we populate the pending player
+  //     // with the logged in player's id
+  //     if (gameData?.whitePlayer === PENDING_PLAYER) {
+  //       updateGame({ whitePlayer: playerId })
+  //       return "w"
+  //     } else {
+  //       updateGame({ blackPlayer: playerId })
+  //       return "b"
+  //     }
+  //   }
+  // }, [session, gameData])
+
+  const chessboardProps: ChessboardProps = {
+    id,
+    mode,
   }
+
+  return isMobile ? (
+    <MobileChessboard {...chessboardProps} />
+  ) : (
+    <BrowserChessboard {...chessboardProps} />
+  )
 }

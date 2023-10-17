@@ -1,33 +1,36 @@
-"use client"
-
 import { Chessboard as ReactChessboard } from "react-chessboard"
-import { useCallback, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import {
   CustomSquareStyles,
   Piece,
   Square,
 } from "react-chessboard/dist/chessboard/types"
 import { kingCheckedStyle, possibleMoveStyle, sharedProps } from "./sharedProps"
-import { DeviceSpecificChessboardProps } from "./types"
+import { ChessboardProps } from "./types"
 import { Chess } from "chess.js"
+import { useFen } from "@/hooks/games"
+import Spinner from "../ui/spinner"
 
 export default function BrowserChessboard({
   mode,
-}: DeviceSpecificChessboardProps) {
-  const [game, setGame] = useState(new Chess())
+  id,
+  ...props
+}: ChessboardProps) {
+  const { fen, setFen } = useFen(id)
+  const [game, setGame] = useState<Chess>()
   const [customSquareStyles, setCustomSquareStyles] =
     useState<CustomSquareStyles>({})
 
   const handleOnSquareClick = useCallback(
     (square: Square) => {
-      const pieceOnClickedSquare = game.get(square)
+      const pieceOnClickedSquare = game?.get(square)
 
       // set moveFrom
       // highlight the clicked square
       // highlight possible squares
-      if (pieceOnClickedSquare.color === game.turn()) {
+      if (pieceOnClickedSquare?.color === game?.turn()) {
         const possibleSquaresStyle = game
-          .moves({ square, verbose: true })
+          ?.moves({ square, verbose: true })
           .map((move) => move.to)
           .reduce(
             (acc, square) => ({
@@ -36,7 +39,7 @@ export default function BrowserChessboard({
             }),
             {}
           )
-        setCustomSquareStyles(possibleSquaresStyle)
+        setCustomSquareStyles(possibleSquaresStyle ?? {})
       }
     },
     [game]
@@ -48,18 +51,19 @@ export default function BrowserChessboard({
 
   const handlePieceDrop = useCallback(
     (sourceSquare: Square, targetSquare: Square, piece: Piece) => {
+      if (!game) return false
       try {
-        game.move({
+        game?.move({
           from: sourceSquare,
           to: targetSquare,
           promotion: piece[1].toLowerCase() ?? "q",
         })
 
-        setGame(new Chess(game.fen()))
+        setGame(new Chess(game?.fen()))
         setCustomSquareStyles({})
         return true
       } catch (err) {
-        if (game.inCheck()) {
+        if (game?.inCheck()) {
           const kingSquare = game
             .board()
             .flat()
@@ -77,9 +81,32 @@ export default function BrowserChessboard({
     [game]
   )
 
+  useEffect(() => {
+    // use the databse to initialize game
+    if (fen && !game) {
+      setGame(new Chess(fen))
+    }
+  }, [fen])
+
+  useEffect(() => {
+    // when the game is initialized,
+    // update the fen in the database every move
+    if (game) {
+      setFen(game.fen())
+    }
+  }, [game])
+
+  if (!game)
+    return (
+      <div className="w-full h-full flex items-center justify-center">
+        <Spinner className="w-8 h-8" />
+      </div>
+    )
+
   return (
     <ReactChessboard
-      position={game.fen()}
+      {...props}
+      position={game?.fen()}
       onPieceDrop={handlePieceDrop}
       onPieceDragBegin={handleOnPieceDragBegin}
       onSquareClick={handleOnSquareClick}

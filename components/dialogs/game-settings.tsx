@@ -8,7 +8,7 @@ import { Dialog } from "@radix-ui/themes"
 import { useSession } from "next-auth/react"
 import { useCreateGame } from "@/hooks/games"
 import { Game } from "@/types/games"
-import { DEFAULT_FEN } from "@/utils/constants"
+import { DEFAULT_FEN, ENGINE_PLAYER, PENDING_PLAYER } from "@/utils/constants"
 import { GameMode } from "@/types/games"
 import { useRouter } from "next/navigation"
 import Spinner from "../ui/spinner"
@@ -50,10 +50,12 @@ export default function GameSettings({ trigger, context, mode }: Props) {
   const handleCreateGame = (mode?: GameMode) => {
     if (!user || !mode) return
 
+    const opponentPlayer = mode === "vsEngine" ? ENGINE_PLAYER : PENDING_PLAYER
+
     createGame({
       fen: DEFAULT_FEN,
-      whitePlayer: playerColor === "w" ? user.id : "pending",
-      blackPlayer: playerColor === "b" ? user.id : "pending",
+      whitePlayer: playerColor === "w" ? user.id : opponentPlayer,
+      blackPlayer: playerColor === "b" ? user.id : opponentPlayer,
       mode,
       timeLimit: 20,
     })

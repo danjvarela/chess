@@ -8,7 +8,13 @@ import { Card, Button } from "@radix-ui/themes"
 import { AiOutlineArrowLeft } from "@react-icons/all-files/ai/AiOutlineArrowLeft"
 import { AiOutlineSetting } from "@react-icons/all-files/ai/AiOutlineSetting"
 
-export default function VsComputer() {
+type Props = {
+  params: {
+    id: string
+  }
+}
+
+export default function GamePage({ params }: Props) {
   return (
     <div
       className={cn(
@@ -41,7 +47,7 @@ export default function VsComputer() {
       </Card>
 
       <div className="w-full aspect-square bg-sage-50">
-        <Chessboard mode="vsEngine" />
+        <Chessboard mode="vsEngine" id={params.id} />
       </div>
 
       <Card size="1" className="w-full flex justify-center">

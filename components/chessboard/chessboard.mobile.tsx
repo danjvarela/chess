@@ -1,5 +1,3 @@
-"use client"
-
 import { Chessboard as ReactChessboard } from "react-chessboard"
 import {
   kingCheckedStyle,
@@ -7,18 +5,23 @@ import {
   possibleMoveStyle,
   sharedProps,
 } from "./sharedProps"
-import { useCallback, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import {
   CustomSquareStyles,
   PromotionPieceOption,
 } from "react-chessboard/dist/chessboard/types"
 import { Square, Chess, PieceSymbol } from "chess.js"
-import { DeviceSpecificChessboardProps } from "./types"
+import { ChessboardProps } from "./types"
+import { useFen } from "@/hooks/games"
+import Spinner from "../ui/spinner"
 
 export default function MobileChessboard({
   mode,
-}: DeviceSpecificChessboardProps) {
-  const [game, setGame] = useState(new Chess())
+  id,
+  ...props
+}: ChessboardProps) {
+  const { fen, setFen } = useFen(id)
+  const [game, setGame] = useState<Chess>()
   const [showPromotionDialog, setShowPromotionDialog] = useState(false)
   const [moveFrom, setMoveFrom] = useState<Square>()
   const [promotionToSquare, setPromotionToSquare] = useState<Square>()
@@ -36,8 +39,8 @@ export default function MobileChessboard({
   const makeMove = useCallback(
     (from: Square, to: Square, promotion?: PieceSymbol) => {
       try {
-        game.move({ from, to, promotion })
-        setGame(new Chess(game.fen()))
+        game?.move({ from, to, promotion })
+        setGame(new Chess(game?.fen()))
         reset()
       } catch (err) {}
     },
@@ -45,10 +48,10 @@ export default function MobileChessboard({
   )
 
   const handleOnSquareClick = (square: Square) => {
-    const pieceOnClickedSquare = game.get(square)
+    const pieceOnClickedSquare = game?.get(square)
 
     const foundMove = game
-      .moves({ square: moveFrom, verbose: true })
+      ?.moves({ square: moveFrom, verbose: true })
       .find((move) => move.to === square)
 
     const isPromotion =
@@ -71,12 +74,13 @@ export default function MobileChessboard({
     }
 
     // player executed an illegal move and the king is in check
-    if (moveFrom && !foundMove && game.isCheck()) {
+    if (moveFrom && !foundMove && game?.isCheck()) {
       const kingSquare = game
-        .board()
+        ?.board()
         .flat()
         .find(
-          (position) => position?.color === game.turn() && position.type === "k"
+          (position) =>
+            position?.color === game?.turn() && position.type === "k"
         )?.square
 
       if (!kingSquare) return
@@ -88,9 +92,9 @@ export default function MobileChessboard({
     // set moveFrom
     // highlight the clicked square
     // highlight possible squares
-    if (pieceOnClickedSquare.color === game.turn()) {
+    if (pieceOnClickedSquare?.color === game?.turn()) {
       const possibleSquaresStyle = game
-        .moves({ square, verbose: true })
+        ?.moves({ square, verbose: true })
         .map((move) => move.to)
         .reduce(
           (acc, square) => ({
@@ -122,9 +126,32 @@ export default function MobileChessboard({
     return true
   }
 
+  useEffect(() => {
+    // use the databse to initialize game
+    if (fen && !game) {
+      setGame(new Chess(fen))
+    }
+  }, [fen])
+
+  useEffect(() => {
+    // when the game is initialized,
+    // update the fen in the database every move
+    if (game) {
+      setFen(game.fen())
+    }
+  }, [game])
+
+  if (!game)
+    return (
+      <div className="w-full h-full flex items-center justify-center">
+        <Spinner className="w-8 h-8" />
+      </div>
+    )
+
   return (
     <ReactChessboard
-      position={game.fen()}
+      {...props}
+      position={fen}
       animationDuration={200}
       arePiecesDraggable={false}
       onSquareClick={handleOnSquareClick}
