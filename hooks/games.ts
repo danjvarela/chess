@@ -3,8 +3,11 @@ import { collections } from "@/utils/firebase"
 import { Game } from "@/types/games"
 import { addDoc, doc, updateDoc } from "firebase/firestore"
 import { useDocument } from "react-firebase-hooks/firestore"
-import { useCallback } from "react"
+import { useCallback, useMemo } from "react"
 import { pickDocumentHookProps, pickMutationProps } from "./utils"
+import { useSession } from "next-auth/react"
+import { Color } from "chess.js"
+import { ENGINE_PLAYER } from "@/utils/constants"
 
 export const useCreateGame = () => {
   const mutation = useMutation(
@@ -39,4 +42,32 @@ export const useFen = (gameId: string) => {
   )
 
   return { fen, setFen }
+}
+
+export const usePlayerColor = (gameId: string): Color | undefined => {
+  const session = useSession()
+  const playerId = session?.data?.user?.id
+  const { data: gameInfo } = useGame(gameId)
+  const gameData = gameInfo?.data()
+
+  return useMemo(() => {
+    if (playerId === gameData?.blackPlayer) return "b"
+    if (playerId === gameData?.whitePlayer) return "w"
+  }, [gameData, playerId])
+}
+
+export const useEngineColor = (gameId: string): Color | undefined => {
+  const { data: gameInfo } = useGame(gameId)
+  const gameData = gameInfo?.data()
+
+  return useMemo(() => {
+    if (gameData?.mode !== "vsEngine") return
+    if (gameData?.blackPlayer === ENGINE_PLAYER) return "b"
+    if (gameData?.whitePlayer === ENGINE_PLAYER) return "w"
+  }, [gameData])
+}
+
+export const useEngineDifficulty = (gameId: string) => {
+  const { data: gameInfo } = useGame(gameId)
+  return gameInfo?.data()?.engineDifficulty
 }

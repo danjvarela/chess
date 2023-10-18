@@ -8,13 +8,16 @@ import { Dialog } from "@radix-ui/themes"
 import { useSession } from "next-auth/react"
 import { useCreateGame } from "@/hooks/games"
 import { Game } from "@/types/games"
-import { DEFAULT_FEN, ENGINE_PLAYER, PENDING_PLAYER } from "@/utils/constants"
+import {
+  DEFAULT_FEN,
+  ENGINE_PLAYER,
+  PENDING_PLAYER,
+  MIN_ENGINE_DIFFICULTY,
+  MAX_ENGINE_DIFFICULTY,
+} from "@/utils/constants"
 import { GameMode } from "@/types/games"
 import { useRouter } from "next/navigation"
 import Spinner from "../ui/spinner"
-
-const MIN_ENGINE_DIFFICULTY = 2
-const MAX_ENGINE_DIFFICULTY = 24
 
 type Props = {
   trigger: JSX.Element
@@ -58,12 +61,13 @@ export default function GameSettings({ trigger, context, mode }: Props) {
       blackPlayer: playerColor === "b" ? user.id : opponentPlayer,
       mode,
       timeLimit: 20,
+      engineDifficulty: mode === "vsEngine" ? difficulty : undefined,
     })
   }
 
   useEffect(() => {
     if (createdGameRef?.id) router.push(`/games/${createdGameRef.id}`)
-  }, [createdGameRef])
+  }, [createdGameRef, router])
 
   return (
     <Dialog.Root>

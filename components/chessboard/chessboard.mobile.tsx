@@ -12,14 +12,19 @@ import {
 } from "react-chessboard/dist/chessboard/types"
 import { Square, Chess, PieceSymbol } from "chess.js"
 import { ChessboardProps } from "./types"
-import { useFen } from "@/hooks/games"
+import { useEngineColor, useEngineDifficulty, useFen } from "@/hooks/games"
 import Spinner from "../ui/spinner"
+import { useEngine } from "@/hooks/engine"
+import { safeMove } from "@/utils/games"
 
 export default function MobileChessboard({
   mode,
   id,
   ...props
 }: ChessboardProps) {
+  const engineColor = useEngineColor(id)
+  const { engine, executeEngineMove } = useEngine()
+  const engineDifficulty = useEngineDifficulty(id)
   const { fen, setFen } = useFen(id)
   const [game, setGame] = useState<Chess>()
   const [showPromotionDialog, setShowPromotionDialog] = useState(false)
@@ -36,22 +41,34 @@ export default function MobileChessboard({
     setShowPromotionDialog(false)
   }
 
-  const makeMove = useCallback(
-    (from: Square, to: Square, promotion?: PieceSymbol) => {
-      try {
-        game?.move({ from, to, promotion })
-        setGame(new Chess(game?.fen()))
-        reset()
-      } catch (err) {}
-    },
-    [game]
-  )
+  const makeMove = (from: Square, to: Square, promotion?: PieceSymbol) => {
+    if (!game) return
+    const move = safeMove(game, { from, to, promotion })
+    if (move === null) return
+    setGame(new Chess(game?.fen()))
+    reset()
+
+    // if mode is vsEngine, execute engine's move
+    if (mode === "vsEngine" && engineColor) {
+      setTimeout(
+        () =>
+          executeEngineMove({
+            gameState: [game, setGame],
+            engine,
+            color: engineColor,
+            difficulty: engineDifficulty,
+          }),
+        300
+      )
+    }
+  }
 
   const handleOnSquareClick = (square: Square) => {
-    const pieceOnClickedSquare = game?.get(square)
+    if (!game) return
+    const pieceOnClickedSquare = game.get(square)
 
     const foundMove = game
-      ?.moves({ square: moveFrom, verbose: true })
+      .moves({ square: moveFrom, verbose: true })
       .find((move) => move.to === square)
 
     const isPromotion =
@@ -74,13 +91,12 @@ export default function MobileChessboard({
     }
 
     // player executed an illegal move and the king is in check
-    if (moveFrom && !foundMove && game?.isCheck()) {
+    if (moveFrom && !foundMove && game.isCheck()) {
       const kingSquare = game
-        ?.board()
+        .board()
         .flat()
         .find(
-          (position) =>
-            position?.color === game?.turn() && position.type === "k"
+          (position) => position?.color === game.turn() && position.type === "k"
         )?.square
 
       if (!kingSquare) return
@@ -92,9 +108,9 @@ export default function MobileChessboard({
     // set moveFrom
     // highlight the clicked square
     // highlight possible squares
-    if (pieceOnClickedSquare?.color === game?.turn()) {
+    if (pieceOnClickedSquare?.color === game.turn()) {
       const possibleSquaresStyle = game
-        ?.moves({ square, verbose: true })
+        .moves({ square, verbose: true })
         .map((move) => move.to)
         .reduce(
           (acc, square) => ({
@@ -131,7 +147,7 @@ export default function MobileChessboard({
     if (fen && !game) {
       setGame(new Chess(fen))
     }
-  }, [fen])
+  }, [fen, game])
 
   useEffect(() => {
     // when the game is initialized,
@@ -139,7 +155,7 @@ export default function MobileChessboard({
     if (game) {
       setFen(game.fen())
     }
-  }, [game])
+  }, [game, setFen])
 
   if (!game)
     return (
