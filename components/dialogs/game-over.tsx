@@ -17,8 +17,8 @@ export default function GameOverDialog({ game }: { game?: Chess }) {
 
   const description = (() => {
     if (game.isInsufficientMaterial()) return "due to insufficient material"
-    if (game.isCheckmate()) return "due to checkmate"
-    if (game.isStalemate()) return "due to stalemate"
+    if (game.isCheckmate()) return "by checkmate"
+    if (game.isStalemate()) return "by stalemate"
   })()
 
   return (

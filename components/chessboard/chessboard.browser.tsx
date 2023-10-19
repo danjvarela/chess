@@ -12,6 +12,7 @@ import { useEngineColor, useEngineDifficulty, useFen } from "@/hooks/games"
 import Spinner from "../ui/spinner"
 import { useEngine } from "@/hooks/engine"
 import { safeMove } from "@/utils/games"
+import GameOverDialog from "../dialogs/game-over"
 
 export default function BrowserChessboard({
   mode,
@@ -123,14 +124,17 @@ export default function BrowserChessboard({
     )
 
   return (
-    <ReactChessboard
-      {...props}
-      position={game?.fen()}
-      onPieceDrop={handlePieceDrop}
-      onPieceDragBegin={handleOnPieceDragBegin}
-      onSquareClick={handleOnSquareClick}
-      customSquareStyles={customSquareStyles}
-      {...sharedProps}
-    />
+    <>
+      <ReactChessboard
+        {...props}
+        position={game?.fen()}
+        onPieceDrop={handlePieceDrop}
+        onPieceDragBegin={handleOnPieceDragBegin}
+        onSquareClick={handleOnSquareClick}
+        customSquareStyles={customSquareStyles}
+        {...sharedProps}
+      />
+      <GameOverDialog game={game} />
+    </>
   )
 }

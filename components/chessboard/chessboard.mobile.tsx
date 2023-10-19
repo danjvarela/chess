@@ -16,6 +16,7 @@ import { useEngineColor, useEngineDifficulty, useFen } from "@/hooks/games"
 import Spinner from "../ui/spinner"
 import { useEngine } from "@/hooks/engine"
 import { safeMove } from "@/utils/games"
+import GameOverDialog from "../dialogs/game-over"
 
 export default function MobileChessboard({
   mode,
@@ -165,17 +166,20 @@ export default function MobileChessboard({
     )
 
   return (
-    <ReactChessboard
-      {...props}
-      position={fen}
-      animationDuration={200}
-      arePiecesDraggable={false}
-      onSquareClick={handleOnSquareClick}
-      customSquareStyles={customSquareStyles}
-      showPromotionDialog={showPromotionDialog}
-      promotionToSquare={promotionToSquare}
-      onPromotionPieceSelect={handleOnPromotionPieceSelect}
-      {...sharedProps}
-    />
+    <>
+      <ReactChessboard
+        {...props}
+        position={fen}
+        animationDuration={200}
+        arePiecesDraggable={false}
+        onSquareClick={handleOnSquareClick}
+        customSquareStyles={customSquareStyles}
+        showPromotionDialog={showPromotionDialog}
+        promotionToSquare={promotionToSquare}
+        onPromotionPieceSelect={handleOnPromotionPieceSelect}
+        {...sharedProps}
+      />
+      <GameOverDialog game={game} />
+    </>
   )
 }
