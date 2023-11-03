@@ -1,9 +1,7 @@
-'use client';
-
-import { Button } from "@nextui-org/react";
-
 export default function Home() {
-  return <div>
-    <Button>hwllo</Button>
-  </div>;
+  return (
+    <div className="container mx-auto border h-full">
+     hello 
+    </div>
+  )
 }
