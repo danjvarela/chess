@@ -1,7 +1,9 @@
+import { Button } from "@/components/ui/button"
+
 export default function Home() {
   return (
     <div className="container mx-auto border h-full">
-     hello 
+      <Button>hello</Button>
     </div>
   )
 }
