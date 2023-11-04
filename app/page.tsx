@@ -2,7 +2,7 @@ import { BaseChessboard } from "@/components/chessboard"
 import GameMenuDialog from "@/components/dialogs/game-menu"
 import GameMenu from "@/components/game-menu"
 
-export default function Home() {
+export default async function Home() {
   return (
     <div className="container mx-auto h-screen flex justify-center items-center px-4 relative">
       <div className="absolute h-fit inset-0 w-full flex items-center justify-end p-2 xs:hidden">

@@ -1,9 +1,17 @@
+"use client"
+
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Separator } from "@/components/ui/separator"
 import { Slider } from "@/components/ui/slider"
 import Logo from "./logo"
+import { signIn, signOut } from "next-auth/react"
+import { useSession } from "@/hooks/session"
+import { useState } from "react"
+import { Loader2 } from "lucide-react"
+
+type Provider = "google" | "facebook"
 
 function Title({ title }: { title: string }) {
   return (
@@ -21,6 +29,20 @@ function Title({ title }: { title: string }) {
 }
 
 export default function GameMenu() {
+  const { data: session } = useSession()
+  const [isSigningIn, setIsSigningIn] = useState<Provider>()
+  const [isSigningOut, setIsSigningOut] = useState(false)
+
+  const handleSignin = (provider: Provider) => () => {
+    setIsSigningIn(provider)
+    signIn(provider)
+  }
+
+  const handleSignout = () => {
+    setIsSigningOut(true)
+    signOut()
+  }
+
   return (
     <>
       <div className="w-32 mb-8">
@@ -30,14 +52,40 @@ export default function GameMenu() {
       <div className="w-full flex flex-col gap-4">
         <Title title="Play with a friend" />
 
-        <span className="text-muted-foreground text-sm leading-snug">
-          To play with a friend, you first need to create an account.
-        </span>
-
-        <div className="flex flex-col gap-2">
-          <Button>Continue with Google</Button>
-          <Button>Continue with Facebook</Button>
-        </div>
+        {session ? (
+          <Button variant="secondary" onClick={handleSignout}>
+            {isSigningOut && <Loader2 className="mr-2 w-4 h-4 animate-spin" />}
+            Signout
+          </Button>
+        ) : (
+          <>
+            <span className="text-muted-foreground text-sm leading-snug">
+              To play with a friend, you first need to create an account.
+            </span>
+            <div className="flex flex-col gap-2">
+              <Button
+                onClick={handleSignin("google")}
+                disabled={isSigningIn === "google"}
+                aria-disabled={isSigningIn === "google"}
+              >
+                {isSigningIn === "google" && (
+                  <Loader2 className="mr-2 w-4 h-4 animate-spin" />
+                )}
+                Continue with Google
+              </Button>
+              <Button
+                onClick={handleSignin("facebook")}
+                disabled={isSigningIn === "facebook"}
+                aria-disabled={isSigningIn === "facebook"}
+              >
+                {isSigningIn === "facebook" && (
+                  <Loader2 className="mr-2 w-4 h-4 animate-spin" />
+                )}
+                Continue with Facebook
+              </Button>
+            </div>
+          </>
+        )}
       </div>
 
       <Separator className="my-8" />
