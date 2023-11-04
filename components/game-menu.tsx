@@ -5,22 +5,28 @@ import { Label } from "@/components/ui/label"
 import { Separator } from "@/components/ui/separator"
 import { Slider } from "@/components/ui/slider"
 
+function Title({ title }: { title: string }) {
+  return (
+    <span
+      className="mb-4 font-semibold text-transparent text-lg"
+      style={{
+        background: "var(--gradient)",
+        WebkitBackgroundClip: "text",
+        backgroundClip: "text",
+      }}
+    >
+      {title}
+    </span>
+  )
+}
+
 export default function GameMenu() {
   return (
     <div>
       <Logo className="w-24 mb-8" />
 
       <div className="w-full flex flex-col gap-4">
-        <span
-          className="mb-4 font-semibold text-transparent text-lg"
-          style={{
-            background: "var(--gradient)",
-            WebkitBackgroundClip: "text",
-            backgroundClip: "text",
-          }}
-        >
-          Play with a friend
-        </span>
+        <Title title="Play with a friend" />
 
         <span className="text-muted-foreground text-sm leading-snug">
           To play with a friend, you first need to create an account.
@@ -35,16 +41,7 @@ export default function GameMenu() {
       <Separator className="my-8" />
 
       <div className="w-full flex flex-col gap-4">
-        <span
-          className="mb-4 font-semibold text-transparent text-lg"
-          style={{
-            background: "var(--gradient)",
-            WebkitBackgroundClip: "text",
-            backgroundClip: "text",
-          }}
-        >
-          Play with a bot
-        </span>
+        <Title title="Play with a bot" />
 
         <div className="flex flex-col gap-4">
           <Label>Difficulty</Label>
