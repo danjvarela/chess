@@ -7,7 +7,7 @@ import { Separator } from "@/components/ui/separator"
 import { Slider } from "@/components/ui/slider"
 import Logo from "./logo"
 import { signIn, signOut } from "next-auth/react"
-import { useSession } from "@/hooks/session"
+import { useClientAuth } from "@/hooks/session"
 import { useState } from "react"
 import { Loader2 } from "lucide-react"
 
@@ -29,7 +29,7 @@ function Title({ title }: { title: string }) {
 }
 
 export default function GameMenu() {
-  const { data: session } = useSession()
+  const { data: session } = useClientAuth()
   const [isSigningIn, setIsSigningIn] = useState<Provider>()
   const [isSigningOut, setIsSigningOut] = useState(false)
 
