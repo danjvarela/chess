@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@next-auth/firebase-adapter": "^2.0.1",
     "@radix-ui/react-dialog": "^1.0.5",
     "@radix-ui/react-label": "^2.0.2",
     "@radix-ui/react-separator": "^1.0.3",
@@ -23,6 +24,8 @@
     "clsx": "^2.0.0",
     "eslint": "8.50.0",
     "eslint-config-next": "13.5.2",
+    "firebase": "^10.5.2",
+    "firebase-admin": "^11.11.0",
     "lucide-react": "^0.292.0",
     "next": "13.5.2",
     "next-auth": "^4.24.4",
