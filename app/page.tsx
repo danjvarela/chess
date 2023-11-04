@@ -1,16 +1,25 @@
-"use client"
-
-import GameMenu from "@/components/game-menu"
 import { BaseChessboard } from "@/components/chessboard"
+import GameMenuDialog from "@/components/dialogs/game-menu"
+import GameMenu from "@/components/game-menu"
 
 export default function Home() {
   return (
-    <div className="container mx-auto h-screen flex items-center px-2">
-      <div className="aspect-square w-[min(75vh,95vw)] mx-auto relative">
-        <BaseChessboard />
+    <div className="container mx-auto h-screen flex justify-center items-center px-4 relative">
+      <div className="absolute h-fit inset-0 w-full flex items-center justify-end p-2 xs:hidden">
+        <GameMenuDialog />
+      </div>
 
-        <div className="hidden lg:block absolute top-0 -left-[300px] w-[300px] p-4 pr-8">
-          <GameMenu  />
+      <div className="flex justify-center gap-8 w-full">
+        <div className="w-full max-w-2xl relative flex">
+          <BaseChessboard />
+
+          <div className="flex-1 hidden xs:block lg:hidden mx-2">
+            <GameMenuDialog />
+          </div>
+        </div>
+
+        <div className="hidden lg:block flex-1 max-w-[250px]">
+          <GameMenu />
         </div>
       </div>
     </div>

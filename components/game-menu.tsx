@@ -1,9 +1,9 @@
-import Logo from "@/components/logo"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Separator } from "@/components/ui/separator"
 import { Slider } from "@/components/ui/slider"
+import Logo from "./logo"
 
 function Title({ title }: { title: string }) {
   return (
@@ -22,8 +22,10 @@ function Title({ title }: { title: string }) {
 
 export default function GameMenu() {
   return (
-    <div>
-      <Logo className="w-24 mb-8" />
+    <>
+      <div className="w-32 mb-8">
+        <Logo />
+      </div>
 
       <div className="w-full flex flex-col gap-4">
         <Title title="Play with a friend" />
@@ -65,6 +67,6 @@ export default function GameMenu() {
 
         <Button>Start Game</Button>
       </div>
-    </div>
+    </>
   )
 }

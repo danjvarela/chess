@@ -1,3 +1,5 @@
+"use client"
+
 import { Chessboard as ReactChessboard } from "react-chessboard"
 
 export default function BaseChessboard({
@@ -5,7 +7,7 @@ export default function BaseChessboard({
 }: React.ComponentProps<typeof ReactChessboard>) {
   return (
     <ReactChessboard
-      customBoardStyle={{borderRadius: 'var(--radius)'}}
+      customBoardStyle={{ borderRadius: "var(--radius)" }}
       customDarkSquareStyle={{ backgroundColor: "#00d0aa" }}
       customLightSquareStyle={{ backgroundColor: "#d7fff8" }}
       {...props}
