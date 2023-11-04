@@ -10,6 +10,7 @@ export default function BaseChessboard({
       customBoardStyle={{ borderRadius: "var(--radius)" }}
       customDarkSquareStyle={{ backgroundColor: "#00d0aa" }}
       customLightSquareStyle={{ backgroundColor: "#d7fff8" }}
+      arePiecesDraggable={false}
       {...props}
     />
   )
