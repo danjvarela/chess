@@ -2,7 +2,6 @@ import "./globals.css"
 import type { Metadata } from "next"
 import { Inter } from "next/font/google"
 import { cn } from "@/lib/utils"
-import Header from "@/components/header"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -19,7 +18,6 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
       <body className={cn(inter.className, "min-h-screen relative")}>
-        <Header />
         {children}
       </body>
     </html>
