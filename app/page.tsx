@@ -1,5 +1,6 @@
 "use client"
 
+import Logo from "@/components/logo"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -14,8 +15,19 @@ export default function Home() {
         <Chessboard />
 
         <div className="absolute top-0 -left-[300px] w-[300px] p-4 pr-8">
+          <Logo className="w-24 mb-8" />
+
           <div className="w-full flex flex-col gap-4">
-            <span className="mb-4 font-semibold">Play with a friend</span>
+            <span
+              className="mb-4 font-semibold text-transparent text-lg"
+              style={{
+                background: "var(--gradient)",
+                WebkitBackgroundClip: "text",
+                backgroundClip: "text",
+              }}
+            >
+              Play with a friend
+            </span>
 
             <span className="text-muted-foreground text-sm leading-snug">
               To play with a friend, you first need to create an account.
@@ -30,7 +42,16 @@ export default function Home() {
           <Separator className="my-8" />
 
           <div className="w-full flex flex-col gap-4">
-            <span className="mb-4 font-semibold">Play with a bot</span>
+            <span
+              className="mb-4 font-semibold text-transparent text-lg"
+              style={{
+                background: "var(--gradient)",
+                WebkitBackgroundClip: "text",
+                backgroundClip: "text",
+              }}
+            >
+              Play with a bot
+            </span>
 
             <div className="flex flex-col gap-4">
               <Label>Difficulty</Label>
