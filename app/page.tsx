@@ -5,12 +5,12 @@ import { BaseChessboard } from "@/components/chessboard"
 
 export default function Home() {
   return (
-    <div className="container mx-auto h-screen flex items-center">
-      <div className="aspect-square h-[90%] mx-auto relative">
+    <div className="container mx-auto h-screen flex items-center px-2">
+      <div className="aspect-square w-[min(75vh,95vw)] mx-auto relative">
         <BaseChessboard />
 
-        <div className="absolute top-0 -left-[300px] w-[300px] p-4 pr-8">
-          <GameMenu />
+        <div className="hidden lg:block absolute top-0 -left-[300px] w-[300px] p-4 pr-8">
+          <GameMenu  />
         </div>
       </div>
     </div>
